@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rift.net", "rift.net\rift.net.csproj", "{F995CCB5-5588-487F-836D-D241D7DD6744}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rift.net.tests", "rift.net.tests\rift.net.tests.csproj", "{592120DF-2F5B-487B-BC11-76BE4737C099}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{592120DF-2F5B-487B-BC11-76BE4737C099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{592120DF-2F5B-487B-BC11-76BE4737C099}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{592120DF-2F5B-487B-BC11-76BE4737C099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{592120DF-2F5B-487B-BC11-76BE4737C099}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F995CCB5-5588-487F-836D-D241D7DD6744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F995CCB5-5588-487F-836D-D241D7DD6744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F995CCB5-5588-487F-836D-D241D7DD6744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F995CCB5-5588-487F-836D-D241D7DD6744}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

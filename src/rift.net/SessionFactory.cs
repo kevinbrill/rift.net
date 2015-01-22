@@ -2,16 +2,13 @@
 using RestSharp;
 using System.Linq;
 using System.Net;
+using rift.net.Models;
 
 namespace rift.net
 {
 	public class SessionFactory
 	{
 		const string loginUrl = "https://chat-us.riftgame.com/chatservice/loginByTicket?os=iOS&osVersion=5.100000&vendor=Apple";
-
-		public SessionFactory ()
-		{
-		}
 
 		public Session Login(string username, string password)
 		{

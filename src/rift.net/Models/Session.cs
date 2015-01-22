@@ -3,7 +3,7 @@ using RestSharp;
 using System.Net;
 using System.Linq;
 
-namespace rift.net
+namespace rift.net.Models
 {
 	public class Session
 	{

@@ -2,7 +2,7 @@
 
 namespace rift.net.rest
 {
-	public class GuildMateData : CharacterData
+	public class ContactData : CharacterData
 	{
 		public int displayId {
 			get;
@@ -14,10 +14,6 @@ namespace rift.net.rest
 			set;
 		}
 
-		public bool isOfficer {
-			get;
-			set;
-		}
 	}
 }
 

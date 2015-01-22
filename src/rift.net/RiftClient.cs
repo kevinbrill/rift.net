@@ -31,9 +31,9 @@ namespace rift.net
 
 			Mapper.CreateMap<GuildMateData, GuildMate> ()
 				.IncludeBase<CharacterData, Character> ()
+				.ForMember (x => x.IsOfficer, y => y.MapFrom (src => src.isOfficer))
 				.ForMember (x => x.DisplayId, y => y.MapFrom (src => src.displayId))
-				.ForMember (x => x.CountOfUnreadMessageFrom, y => y.MapFrom (src => src.unreadMsgs))
-				.ForMember (x => x.IsOfficer, y => y.MapFrom (src => src.isOfficer));
+				.ForMember (x => x.CountOfUnreadMessageFrom, y => y.MapFrom (src => src.unreadMsgs));
 
 			Mapper.CreateMap<ShardData, Shard> ()
 				.ForMember (x => x.Id, y => y.MapFrom (src => src.shardId))
@@ -66,6 +66,18 @@ namespace rift.net
 			var content = SimpleJson.DeserializeObject<JsonResponse<ShardData>> (response.Content);
 
 			return Mapper.Map<List<Shard>> (content.data);
+		}
+
+		public List<Character> ListFriends( string characterId )
+		{
+			var request = CreateRequest ("/friends");
+			request.AddQueryParameter ("characterId", characterId);
+
+			var response = client.Execute(request);
+
+			var content = SimpleJson.DeserializeObject<JsonResponse<Character>> (response.Content);
+
+			return Mapper.Map<List<Character>> (content.data);
 		}
 
 		public List<GuildMate> ListGuildmates( long guildId )

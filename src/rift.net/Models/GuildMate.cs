@@ -4,12 +4,12 @@ namespace rift.net
 {
 	public class GuildMate : Character
 	{
-		public int DisplayId {
+		public bool IsOfficer {
 			get;
 			set;
 		}
 
-		public bool IsOfficer {
+		public int DisplayId {
 			get;
 			set;
 		}

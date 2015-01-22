@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using System.Configuration;
 
 namespace rift.net.tests
 {
@@ -11,8 +12,8 @@ namespace rift.net.tests
 		[TestFixtureSetUp()]
 		public void SetUp()
 		{
-			var username = System.Configuration.ConfigurationManager.AppSettings ["username"];
-			var password = System.Configuration.ConfigurationManager.AppSettings ["password"];
+			var username = ConfigurationManager.AppSettings ["username"];
+			var password = ConfigurationManager.AppSettings ["password"];
 
 			var sessionFactory = new SessionFactory ();
 
@@ -56,6 +57,16 @@ namespace rift.net.tests
 				Assert.That (character.Presence, Is.Not.Null);
 				Assert.That (character.Presence.IsOnlineOnWeb, Is.True);
 			}
+		}
+
+		[Test()]
+		public void Verify_That_Character_Has_Friends()
+		{
+			var characterId = ConfigurationManager.AppSettings ["characterId"];
+
+			var contacts = client.ListFriends (characterId);
+
+			Assert.That (contacts, Is.Not.Null.Or.Empty);
 		}
 	}
 }

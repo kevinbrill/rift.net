@@ -47,7 +47,6 @@
     <Compile Include="rest\CharacterData.cs" />
     <Compile Include="Models\Presence.cs" />
     <Compile Include="Models\Shard.cs" />
-    <Compile Include="Models\Guild.cs" />
     <Compile Include="rest\ShardData.cs" />
     <Compile Include="rest\ContactData.cs" />
     <Compile Include="Models\Contact.cs" />
@@ -59,6 +58,10 @@
     <Compile Include="Models\ZoneLocation.cs" />
     <Compile Include="rest\ZoneData.cs" />
     <Compile Include="Models\Session.cs" />
+    <Compile Include="Models\Guilds\Guild.cs" />
+    <Compile Include="Models\Guilds\WallPost.cs" />
+    <Compile Include="Models\Guilds\Info.cs" />
+    <Compile Include="rest\GuildData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -67,5 +70,6 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="rest\" />
+    <Folder Include="Models\Guilds\" />
   </ItemGroup>
 </Project>

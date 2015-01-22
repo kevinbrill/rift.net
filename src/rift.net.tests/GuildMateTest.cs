@@ -9,6 +9,7 @@ namespace rift.net.tests
 	{
 		private RiftClientSecured client;
 		private long guildId;
+		private string characterId;
 
 		[TestFixtureSetUp()]
 		public void SetUp()
@@ -16,6 +17,7 @@ namespace rift.net.tests
 			var username = System.Configuration.ConfigurationManager.AppSettings ["username"];
 			var password = System.Configuration.ConfigurationManager.AppSettings ["password"];
 			var guildSetting = System.Configuration.ConfigurationManager.AppSettings ["guildId"];
+			characterId = System.Configuration.ConfigurationManager.AppSettings ["characterId"];
 
 			guildId = long.Parse (guildSetting);
 
@@ -44,6 +46,11 @@ namespace rift.net.tests
 
 			Assert.That (hasOfficers, Is.True);
 		}
+
+		[Test()]
+		public void Verify_That_Characters_Guild_Is_Valid()
+		{
+			var info = client.GetGuildInfo (characterId);
+		}
 	}
 }
-

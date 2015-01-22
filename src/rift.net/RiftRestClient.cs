@@ -27,7 +27,7 @@ namespace rift.net
 			return request;
 		}
 
-		protected List<U> ExecuteAndWrap<T,U>(RestRequest request) 
+		protected U ExecuteAndWrap<T,U>(RestRequest request) 
 		{
 			var response = Client.Execute(request);
 
@@ -36,7 +36,7 @@ namespace rift.net
 			if ((content == null) || (content.status != "success"))
 				throw new Exception ("An error occurred calling the service");
 
-			return Mapper.Map<List<U>> (content.data);
+			return Mapper.Map<U> (content.data);
 		}
 	}
 }

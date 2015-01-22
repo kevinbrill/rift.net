@@ -4,6 +4,7 @@ using AutoMapper;
 using rift.net.rest;
 using System.Collections.Generic;
 using rift.net.Models;
+using rift.net.Models.Guilds;
 
 namespace rift.net
 {
@@ -29,7 +30,7 @@ namespace rift.net
 		{
 			var request = CreateRequest ("/shard/list");
 
-			return ExecuteAndWrap<ShardData, Shard> (request);
+			return ExecuteAndWrap<List<ShardData>, List<Shard>> (request);
 		}
 
 		public List<Zone> ListZones(int shardId)
@@ -37,7 +38,7 @@ namespace rift.net
 			var request = CreateRequest ("zoneevent/list");
 			request.AddQueryParameter ("shardId", shardId.ToString ());
 
-			return ExecuteAndWrap<ZoneData, Zone> (request);
+			return ExecuteAndWrap<List<ZoneData>, List<Zone>> (request);
 		}
 	}
 }

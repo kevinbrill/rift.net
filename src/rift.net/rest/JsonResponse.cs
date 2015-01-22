@@ -10,7 +10,7 @@ namespace rift.net.rest
 			set;
 		}
 
-		public List<T> data {
+		public T data {
 			get;
 			set;
 		}

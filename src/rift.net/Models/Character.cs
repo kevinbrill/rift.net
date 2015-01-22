@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using rift.net.Models.Guilds;
 
 namespace rift.net.Models
 {

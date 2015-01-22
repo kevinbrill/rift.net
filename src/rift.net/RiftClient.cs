@@ -19,11 +19,7 @@ namespace rift.net
 		{
 			var request = CreateRequest ("/shard/list");
 
-			var response = Client.Execute(request);
-
-			var content = SimpleJson.DeserializeObject<JsonResponse<ShardData>> (response.Content);
-
-			return Mapper.Map<List<Shard>> (content.data);
+			return ExecuteAndWrap<ShardData, Shard> (request);
 		}
 	}
 }

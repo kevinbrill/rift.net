@@ -1,5 +1,8 @@
 ﻿using System;
 using RestSharp;
+using System.Collections.Generic;
+using rift.net.rest;
+using AutoMapper;
 
 namespace rift.net
 {
@@ -22,6 +25,18 @@ namespace rift.net
 			var request = new RestRequest (url, method);
 
 			return request;
+		}
+
+		protected List<U> ExecuteAndWrap<T,U>(RestRequest request) 
+		{
+			var response = Client.Execute(request);
+
+			var content = SimpleJson.DeserializeObject<JsonResponse<T>> (response.Content);
+
+			if ((content == null) || (content.status != "success"))
+				throw new Exception ("An error occurred calling the service");
+
+			return Mapper.Map<List<U>> (content.data);
 		}
 	}
 }

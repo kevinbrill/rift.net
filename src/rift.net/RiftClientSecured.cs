@@ -48,11 +48,7 @@ namespace rift.net
 		{
 			var request = CreateRequest ("/chat/characters");
 
-			var response = Client.Execute(request);
-
-			var content = SimpleJson.DeserializeObject<JsonResponse<CharacterData>> (response.Content);
-
-			return Mapper.Map<List<Character>> (content.data);
+			return ExecuteAndWrap<CharacterData, Character> (request);
 		}
 
 		public List<Contact> ListFriends( string characterId )
@@ -60,11 +56,7 @@ namespace rift.net
 			var request = CreateRequest ("/friends");
 			request.AddQueryParameter ("characterId", characterId);
 
-			var response = Client.Execute(request);
-
-			var content = SimpleJson.DeserializeObject<JsonResponse<ContactData>> (response.Content);
-
-			return Mapper.Map<List<Contact>> (content.data);
+			return ExecuteAndWrap<ContactData, Contact> (request);
 		}
 
 		public List<Contact> ListGuildmates( long guildId )
@@ -72,11 +64,7 @@ namespace rift.net
 			var request = CreateRequest ("/guild/members");
 			request.AddQueryParameter ("guildId", guildId.ToString());
 
-			var response = Client.Execute(request);
-
-			var content = SimpleJson.DeserializeObject<JsonResponse<ContactData>> (response.Content);
-
-			return Mapper.Map<List<Contact>> (content.data);
+			return ExecuteAndWrap<ContactData, Contact> (request);
 		}
 			
 		protected override RestRequest CreateRequest( string url, Method method = Method.POST)

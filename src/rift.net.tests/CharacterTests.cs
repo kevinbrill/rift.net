@@ -7,7 +7,7 @@ namespace rift.net.tests
 	[TestFixture()]
 	public class CharacterTests
 	{
-		private RiftClient client;
+		private RiftClientSecured client;
 
 		[TestFixtureSetUp()]
 		public void SetUp()
@@ -19,7 +19,7 @@ namespace rift.net.tests
 
 			var session = sessionFactory.Login (username, password);
 
-			client = new RiftClient (session);
+			client = new RiftClientSecured (session);
 		}
 
 		[Test()]

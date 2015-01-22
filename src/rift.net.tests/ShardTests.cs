@@ -12,14 +12,7 @@ namespace rift.net.tests
 		[TestFixtureSetUp()]
 		public void SetUp()
 		{
-			var username = System.Configuration.ConfigurationManager.AppSettings ["username"];
-			var password = System.Configuration.ConfigurationManager.AppSettings ["password"];
-
-			var sessionFactory = new SessionFactory ();
-
-			var session = sessionFactory.Login (username, password);
-
-			client = new RiftClient (session);
+			client = new RiftClient ();
 		}
 
 		[Test()]

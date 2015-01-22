@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Session.cs" />
-    <Compile Include="RiftClient.cs" />
     <Compile Include="SessionFactory.cs" />
     <Compile Include="Models\Character.cs" />
     <Compile Include="rest\JsonResponse.cs" />
@@ -53,6 +52,9 @@
     <Compile Include="rest\ShardData.cs" />
     <Compile Include="rest\ContactData.cs" />
     <Compile Include="Models\Contact.cs" />
+    <Compile Include="RiftClientSecured.cs" />
+    <Compile Include="RiftClient.cs" />
+    <Compile Include="RiftRestClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

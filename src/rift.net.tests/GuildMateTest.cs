@@ -7,7 +7,7 @@ namespace rift.net.tests
 	[TestFixture()]
 	public class GuildMateTests
 	{
-		private RiftClient client;
+		private RiftClientSecured client;
 		private long guildId;
 
 		[TestFixtureSetUp()]
@@ -23,7 +23,7 @@ namespace rift.net.tests
 
 			var session = sessionFactory.Login (username, password);
 
-			client = new RiftClient (session);
+			client = new RiftClientSecured (session);
 		}
 
 		[Test()]

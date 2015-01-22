@@ -29,6 +29,16 @@ namespace rift.net
 						ChatPermissions = new ChatPermissions {CanListen = src.guildListen, CanTalk = src.guildTalk, CanTalkInOfficer = src.guildOfficerChat }});
 				});
 
+			Mapper.CreateMap<ContactData, Contact> ()
+				.IncludeBase<CharacterData, Character> ()
+				.ForMember (x => x.IsOfficer, y => y.MapFrom (src => src.isOfficer))
+				.ForMember(x=>x.Guild, opt => {
+					opt.Condition( src => src.guildId > 0 );
+					opt.MapFrom( src=> new Guild{ Id = src.guildId, 
+						Name = src.guildName,
+						ChatPermissions = new ChatPermissions {CanListen = src.canListen, CanTalk = src.canTalk, CanTalkInOfficer = src.isOfficer }});
+				});
+
 			Mapper.CreateMap<GuildMateData, GuildMate> ()
 				.IncludeBase<CharacterData, Character> ()
 				.ForMember (x => x.IsOfficer, y => y.MapFrom (src => src.isOfficer))
@@ -68,16 +78,16 @@ namespace rift.net
 			return Mapper.Map<List<Shard>> (content.data);
 		}
 
-		public List<Character> ListFriends( string characterId )
+		public List<Contact> ListFriends( string characterId )
 		{
 			var request = CreateRequest ("/friends");
 			request.AddQueryParameter ("characterId", characterId);
 
 			var response = client.Execute(request);
 
-			var content = SimpleJson.DeserializeObject<JsonResponse<Character>> (response.Content);
+			var content = SimpleJson.DeserializeObject<JsonResponse<ContactData>> (response.Content);
 
-			return Mapper.Map<List<Character>> (content.data);
+			return Mapper.Map<List<Contact>> (content.data);
 		}
 
 		public List<GuildMate> ListGuildmates( long guildId )

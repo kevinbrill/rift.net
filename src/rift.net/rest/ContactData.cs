@@ -4,16 +4,20 @@ namespace rift.net.rest
 {
 	public class ContactData : CharacterData
 	{
-		public int displayId {
+		public bool canTalk {
 			get;
 			set;
 		}
 
-		public int unreadMsgs {
+		public bool canListen {
 			get;
 			set;
 		}
 
+		public bool isOfficer {
+			get;
+			set;
+		}
 	}
 }
 

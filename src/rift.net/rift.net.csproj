@@ -51,8 +51,6 @@
     <Compile Include="Models\Shard.cs" />
     <Compile Include="Models\Guild.cs" />
     <Compile Include="rest\ShardData.cs" />
-    <Compile Include="Models\GuildMate.cs" />
-    <Compile Include="rest\GuildMateData.cs" />
     <Compile Include="rest\ContactData.cs" />
     <Compile Include="Models\Contact.cs" />
   </ItemGroup>

@@ -39,12 +39,6 @@ namespace rift.net
 						ChatPermissions = new ChatPermissions {CanListen = src.canListen, CanTalk = src.canTalk, CanTalkInOfficer = src.isOfficer }});
 				});
 
-			Mapper.CreateMap<GuildMateData, GuildMate> ()
-				.IncludeBase<CharacterData, Character> ()
-				.ForMember (x => x.IsOfficer, y => y.MapFrom (src => src.isOfficer))
-				.ForMember (x => x.DisplayId, y => y.MapFrom (src => src.displayId))
-				.ForMember (x => x.CountOfUnreadMessageFrom, y => y.MapFrom (src => src.unreadMsgs));
-
 			Mapper.CreateMap<ShardData, Shard> ()
 				.ForMember (x => x.Id, y => y.MapFrom (src => src.shardId))
 				.ForMember (x => x.Name, y => y.MapFrom (src => src.name));
@@ -90,16 +84,16 @@ namespace rift.net
 			return Mapper.Map<List<Contact>> (content.data);
 		}
 
-		public List<GuildMate> ListGuildmates( long guildId )
+		public List<Contact> ListGuildmates( long guildId )
 		{
 			var request = CreateRequest ("/guild/members");
 			request.AddQueryParameter ("guildId", guildId.ToString());
 
 			var response = client.Execute(request);
 
-			var content = SimpleJson.DeserializeObject<JsonResponse<GuildMateData>> (response.Content);
+			var content = SimpleJson.DeserializeObject<JsonResponse<ContactData>> (response.Content);
 
-			return Mapper.Map<List<GuildMate>> (content.data);
+			return Mapper.Map<List<Contact>> (content.data);
 		}
 
 		private RestRequest CreateRequest( string url, Method method = Method.POST)

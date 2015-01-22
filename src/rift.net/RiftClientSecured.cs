@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using RestSharp;
 using rift.net.rest;
+using rift.net.Models;
 
 namespace rift.net
 {

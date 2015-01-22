@@ -2,14 +2,14 @@
 
 namespace rift.net.Models
 {
-	public class Presence
+	public class ZoneEvent
 	{
-		public bool IsOnlineInGame {
+		public string Name {
 			get;
 			set;
 		}
 
-		public bool IsOnlineOnWeb {
+		public DateTime ActiveSince {
 			get;
 			set;
 		}

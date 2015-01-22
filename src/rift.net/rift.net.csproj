@@ -55,6 +55,10 @@
     <Compile Include="RiftClientSecured.cs" />
     <Compile Include="RiftClient.cs" />
     <Compile Include="RiftRestClient.cs" />
+    <Compile Include="Models\ZoneEvent.cs" />
+    <Compile Include="Models\Zone.cs" />
+    <Compile Include="Models\ZoneLocation.cs" />
+    <Compile Include="rest\ZoneData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

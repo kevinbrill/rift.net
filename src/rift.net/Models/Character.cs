@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace rift.net
+namespace rift.net.Models
 {
 	public class Character
 	{

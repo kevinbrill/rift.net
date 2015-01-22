@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace rift.net
+namespace rift.net.Models
 {
 	public class Guild
 	{

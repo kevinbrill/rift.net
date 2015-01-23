@@ -65,6 +65,8 @@
     <Compile Include="rest\ScratchCardData.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\ScratchCard.cs" />
+    <Compile Include="RiftRestClientSecured.cs" />
+    <Compile Include="ScratchCardClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

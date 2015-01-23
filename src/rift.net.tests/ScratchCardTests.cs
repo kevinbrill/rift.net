@@ -6,7 +6,7 @@ namespace rift.net.tests
 {
 	public class ScratchCardTests
 	{
-		private RiftClientSecured client;
+		private ScratchCardClient client;
 		private long guildId;
 		private string characterId;
 
@@ -24,7 +24,7 @@ namespace rift.net.tests
 
 			var session = sessionFactory.Login (username, password);
 
-			client = new RiftClientSecured (session);
+			client = new ScratchCardClient (session);
 		}
 
 		[Test()]

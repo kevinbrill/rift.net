@@ -8,10 +8,8 @@ using rift.net.Models.Guilds;
 
 namespace rift.net
 {
-	public class RiftClientSecured : RiftRestClient
+	public class RiftClientSecured : RiftRestClientSecured
 	{
-		private Session session;
-
 		static RiftClientSecured()
 		{
 			Mapper.CreateMap<CharacterData, Character> ()
@@ -46,15 +44,10 @@ namespace rift.net
 			Mapper.CreateMap<GuildData, Info> ()
 				.ForMember (x => x.Id, y => y.MapFrom (src => src.guildId))
 				.ForMember (x => x.MessageOfTheDay, y => y.MapFrom (src => src.motd));
-
-			Mapper.CreateMap<ScratchCardData, Card> ();
-			Mapper.CreateMap<AccountScratchCardData, ScratchCard> ()
-				.ForMember (x => x.MaximumPoints, y => y.MapFrom (src => src.maxPoints));
 		}
 
-		public RiftClientSecured (Session session) : base()
+		public RiftClientSecured (Session session) : base(session)
 		{
-			this.session = session;
 		}
 
 		public List<Character> ListCharacters()
@@ -86,31 +79,6 @@ namespace rift.net
 			request.AddQueryParameter ("characterId", characterId);
 
 			return ExecuteAndWrap<GuildData, Info> (request);
-		}
-
-		public ScratchCard GetAccountScratchCardSummary()
-		{
-			var request = CreateRequest ("/scratch/cards");
-
-			return ExecuteAndWrap<AccountScratchCardData, ScratchCard> (request);
-		}
-
-		public List<Card> ListScratchCards()
-		{
-			var request = CreateRequest ("/scratch/cards");
-
-			var scratchSummary = ExecuteAndWrap<AccountScratchCardData, ScratchCard> (request);
-
-			return scratchSummary.Cards;
-		}
-
-		protected override RestRequest CreateRequest( string url, Method method = Method.POST)
-		{
-			var request = base.CreateRequest (url, method);
-
-			request.AddCookie ("SESSIONID", session.Id);
-
-			return request;
 		}
 	}
 }

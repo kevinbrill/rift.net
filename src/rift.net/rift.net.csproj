@@ -44,6 +44,7 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ParseResults.cs" />
@@ -80,6 +81,15 @@
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\InvalidSessionException.cs" />
     <Compile Include="ScratchGameClient.cs" />
+    <Compile Include="RiftChatClient.cs" />
+    <Compile Include="Models\Chat\Message.cs" />
+    <Compile Include="Models\Chat\Sender.cs" />
+    <Compile Include="Models\Chat\Action.cs" />
+    <Compile Include="Models\Chat\StateAction.cs" />
+    <Compile Include="ChatMessageParser.cs" />
+    <Compile Include="rest\Chat\ChatData.cs" />
+    <Compile Include="rest\Chat\BeginData.cs" />
+    <Compile Include="rest\Chat\LoginLogoutData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -100,5 +110,7 @@
     <Folder Include="Models\Guilds\" />
     <Folder Include="Models\Games\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="Models\Chat\" />
+    <Folder Include="rest\Chat\" />
   </ItemGroup>
 </Project>

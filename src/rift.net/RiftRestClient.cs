@@ -20,7 +20,7 @@ namespace rift.net
 			Client = new RestClient (new Uri (url));
 		}
 
-		protected virtual RestRequest CreateRequest(string url, Method method = Method.POST)
+		protected virtual RestRequest CreateRequest(string url, Method method = Method.GET)
 		{
 			var request = new RestRequest (url.Replace ("/chatservice", "/"), method);
 

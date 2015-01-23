@@ -35,7 +35,6 @@ namespace rift.net
 						ChatPermissions = new ChatPermissions {CanListen = src.canListen, CanTalk = src.canTalk, CanTalkInOfficer = src.isOfficer }});
 				});
 
-
 			Mapper.CreateMap<WallPostData, WallPost> ()
 				.ForMember (x => x.Author, y => y.MapFrom (src => src.postedBy))
 				.ForMember (x => x.Message, y => y.MapFrom (src => src.text))

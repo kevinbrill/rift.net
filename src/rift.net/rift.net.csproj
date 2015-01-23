@@ -80,6 +80,7 @@
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\InvalidSessionException.cs" />
     <Compile Include="ScratchGameClient.cs" />
+    <Compile Include="RiftChatClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

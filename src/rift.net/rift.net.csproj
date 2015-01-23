@@ -63,10 +63,10 @@
     <Compile Include="Models\Guilds\Info.cs" />
     <Compile Include="rest\GuildData.cs" />
     <Compile Include="rest\ScratchCardData.cs" />
-    <Compile Include="Models\Card.cs" />
-    <Compile Include="Models\ScratchCard.cs" />
     <Compile Include="RiftRestClientSecured.cs" />
     <Compile Include="ScratchCardClient.cs" />
+    <Compile Include="Models\Games\ScratchCard.cs" />
+    <Compile Include="Models\Games\Card.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -76,5 +76,6 @@
     <Folder Include="Models\" />
     <Folder Include="rest\" />
     <Folder Include="Models\Guilds\" />
+    <Folder Include="Models\Games\" />
   </ItemGroup>
 </Project>

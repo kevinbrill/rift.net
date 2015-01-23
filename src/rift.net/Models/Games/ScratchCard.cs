@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace rift.net.Models
+namespace rift.net.Models.Games
 {
 	public class ScratchCard
 	{

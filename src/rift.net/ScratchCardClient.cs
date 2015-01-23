@@ -2,6 +2,7 @@
 using rift.net.Models;
 using AutoMapper;
 using System.Collections.Generic;
+using rift.net.Models.Games;
 
 namespace rift.net
 {

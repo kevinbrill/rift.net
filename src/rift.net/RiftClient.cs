@@ -13,8 +13,7 @@ namespace rift.net
 		static RiftClient()
 		{
 			Mapper.CreateMap<ShardData, Shard> ()
-				.ForMember (x => x.Id, y => y.MapFrom (src => src.shardId))
-				.ForMember (x => x.Name, y => y.MapFrom (src => src.name));
+				.ForMember (x => x.Id, y => y.MapFrom (src => src.shardId));
 
 			Mapper.CreateMap<ZoneData, Zone>() 
 				.ForMember(x=>x.Id, y => y.MapFrom(src=>src.zoneId))

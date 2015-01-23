@@ -16,7 +16,6 @@ namespace rift.net
 		{
 			Mapper.CreateMap<CharacterData, Character> ()
 				.ForMember (x => x.Id, y => y.MapFrom (src => src.playerId))
-				.ForMember (x => x.Name, y => y.MapFrom (src => src.name))
 				.ForMember (x => x.Shard, y => y.MapFrom (src => new Shard { Id = src.shardId, Name = src.shardName }))
 				.ForMember (x => x.Presence, y => y.MapFrom (src => new Presence {
 					IsOnlineInGame = src.onlineGame,
@@ -31,7 +30,6 @@ namespace rift.net
 
 			Mapper.CreateMap<ContactData, Contact> ()
 				.IncludeBase<CharacterData, Character> ()
-				.ForMember (x => x.IsOfficer, y => y.MapFrom (src => src.isOfficer))
 				.ForMember(x=>x.Guild, opt => {
 					opt.Condition( src => src.guildId > 0 );
 					opt.MapFrom( src=> new Guild{ Id = src.guildId, 
@@ -47,11 +45,11 @@ namespace rift.net
 
 			Mapper.CreateMap<GuildData, Info> ()
 				.ForMember (x => x.Id, y => y.MapFrom (src => src.guildId))
-				.ForMember (x => x.Level, y => y.MapFrom (src => src.level))
-				.ForMember (x => x.MessageOfTheDay, y => y.MapFrom (src => src.motd))
-				.ForMember (x => x.Name, y => y.MapFrom (src => src.name))
-				.ForMember (x => x.ShardId, y => y.MapFrom (src => src.shardId))
-				.ForMember (x => x.Wall, y => y.MapFrom (src => src.wall));
+				.ForMember (x => x.MessageOfTheDay, y => y.MapFrom (src => src.motd));
+
+			Mapper.CreateMap<ScratchCardData, Card> ();
+			Mapper.CreateMap<AccountScratchCardData, ScratchCard> ()
+				.ForMember (x => x.MaximumPoints, y => y.MapFrom (src => src.maxPoints));
 		}
 
 		public RiftClientSecured (Session session) : base()
@@ -88,6 +86,22 @@ namespace rift.net
 			request.AddQueryParameter ("characterId", characterId);
 
 			return ExecuteAndWrap<GuildData, Info> (request);
+		}
+
+		public ScratchCard GetAccountScratchCardSummary()
+		{
+			var request = CreateRequest ("/scratch/cards");
+
+			return ExecuteAndWrap<AccountScratchCardData, ScratchCard> (request);
+		}
+
+		public List<Card> ListScratchCards()
+		{
+			var request = CreateRequest ("/scratch/cards");
+
+			var scratchSummary = ExecuteAndWrap<AccountScratchCardData, ScratchCard> (request);
+
+			return scratchSummary.Cards;
 		}
 
 		protected override RestRequest CreateRequest( string url, Method method = Method.POST)

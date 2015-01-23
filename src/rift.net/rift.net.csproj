@@ -62,6 +62,9 @@
     <Compile Include="Models\Guilds\WallPost.cs" />
     <Compile Include="Models\Guilds\Info.cs" />
     <Compile Include="rest\GuildData.cs" />
+    <Compile Include="rest\ScratchCardData.cs" />
+    <Compile Include="Models\Card.cs" />
+    <Compile Include="Models\ScratchCard.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -1,6 +1,9 @@
 ﻿using System;
 using NUnit.Framework;
 using System.Linq;
+using rift.net.Models.Games;
+using Moq;
+using rift.net.Models;
 
 namespace rift.net.tests
 {
@@ -52,6 +55,27 @@ namespace rift.net.tests
 			var cards = client.ListScratchCards ();
 
 			Assert.That (cards.FirstOrDefault (x => x.Name == gameName), Is.Not.Null);
+		}
+
+		[Test()]
+		public void Verify_That_An_Invalid_Game_Throws_An_Exception()
+		{
+			var game = new Card () { Name = "Test", Url = "/invalid/url" };
+
+			Assert.That (() => client.Play (game, characterId), Throws.TypeOf<InvalidGameException> ());
+		}
+
+		[Test()]
+		public void Verify_That_Being_Out_Of_Points_Throws_An_Exception()
+		{
+			var game = new Card () { Name = "Test", Url = "/invalid/url" };
+			var mock = new Mock<ScratchCardClient> (MockBehavior.Loose, new Session ("foo"));
+
+			mock.Setup (x => x.GetAccountScratchCardSummary ()).Returns (new ScratchCard () { AvailablePoints = 0 });
+
+			var mockedClient = mock.Object;
+
+			Assert.That (() => mockedClient.Play (game, characterId), Throws.TypeOf<NoCardsAvailableException> ());
 		}
 	}
 }

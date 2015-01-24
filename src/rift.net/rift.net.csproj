@@ -67,6 +67,8 @@
     <Compile Include="ScratchCardClient.cs" />
     <Compile Include="Models\Games\ScratchCard.cs" />
     <Compile Include="Models\Games\Card.cs" />
+    <Compile Include="NoCardsAvailableException.cs" />
+    <Compile Include="InvalidGameException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

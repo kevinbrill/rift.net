@@ -77,6 +77,14 @@ namespace rift.net.tests
 
 			Assert.That (() => mockedClient.Play (game, characterId), Throws.TypeOf<NoCardsAvailableException> ());
 		}
+
+		[Test()]
+		public void Verify_Play()
+		{
+			var card = new Card () { Name = "Shinies", Url = "/chatservice/scratch/threeofsix" };
+
+			client.Play (card, characterId);
+		}
 	}
 }
 

@@ -55,5 +55,10 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="app.config" />
+    <None Include="ScratchResults\loser.html" />
+    <None Include="ScratchResults\winner.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ScratchResults\" />
   </ItemGroup>
 </Project>

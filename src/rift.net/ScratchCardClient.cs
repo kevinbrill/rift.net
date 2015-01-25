@@ -78,14 +78,15 @@ namespace rift.net
 				throw new Exception ("An error occurred calling the service", response.ErrorException);
 			}
 
-			// Create and load an html document from the response
-			var doc = new HtmlDocument ();
-			try {
-				doc.LoadHtml (response.Content);
-			} catch (Exception ex) {
+			var parser = new ScratchResultParser();
+			
+			// Parse the results
+			var results = parser.Parse(response.Content);
+
+			if( results.IsWinner )
+			{
 				
 			}
-
 			if (IsGameAWinner (response.Content)) {
 				ClaimPrize (response.Content);
 			} else if (IsGameAReplay (response.Content)) {

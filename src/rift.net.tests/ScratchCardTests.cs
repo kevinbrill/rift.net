@@ -79,6 +79,7 @@ namespace rift.net.tests
 		}
 
 		[Test()]
+		[Ignore()]
 		public void Verify_Play()
 		{
 			var card = new Card () { Name = "Shinies", Url = "/chatservice/scratch/threeofsix" };

@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using rift.net.Models.Games;
 using RestSharp;
 using rift.net.rest;
-using HtmlAgilityPack;
 
 namespace rift.net
 {
 	public class ScratchCardClient : RiftClientSecured
 	{
+		private ScratchResultParser parser = new ScratchResultParser ();
+
 		static ScratchCardClient ()
 		{
 			Mapper.CreateMap<ScratchCardData, Card> ();
@@ -39,8 +40,9 @@ namespace rift.net
 			return scratchSummary.Cards;
 		}
 
-		public void Play( Card card, string characterId )
+		public List<Prize> Play( Card card, string characterId )
 		{
+			List<Prize> prizes = new List<Prize> ();
 			var accountStatus = GetAccountScratchCardSummary ();
 
 			if (accountStatus.AvailablePoints <= 0)
@@ -58,16 +60,6 @@ namespace rift.net
 
 			var response = Client.Execute (request);
 
-			// Another option may be to parse the html returned by the call.
-			//  There is a <div> with an ID of "reward-layer" and a span
-			//  with a class of "reward-text".  In the case of not winning, it is the following:
-			// 
-			// <div id="reward-layer">
-			//		<span class="reward-text">Sorry, you did not win. Please try again later.</span>
-			// </div> 
-			//
-			// Could we parse that the determine the result?
-
 			// Winner?
 			//return '/chatservice/scratch/redeem?game=02a07cd8-f08b-4931-9488-3b44370ad2b3';
 			// Calling the above route returns Content of:
@@ -78,78 +70,52 @@ namespace rift.net
 				throw new Exception ("An error occurred calling the service", response.ErrorException);
 			}
 
-			var parser = new ScratchResultParser();
-			
 			// Parse the results
 			var results = parser.Parse(response.Content);
 
-			if( results.IsWinner )
-			{
-				
+			if (results.IsWinner) {
+				// Claim Prize
+				prizes = ClaimPrize (results);
+			} else if (results.IsReplay) {
+				// Replay
+				prizes = Replay (results);
 			}
-			if (IsGameAWinner (response.Content)) {
-				ClaimPrize (response.Content);
-			} else if (IsGameAReplay (response.Content)) {
-				Replay (response.Content);
-			}
+
+			return prizes;
 		}
 
-		private bool IsGameAWinner(string content)
+		private List<Prize> ClaimPrize( ParseResults results )
 		{
-			var indexOfRedeem = content.IndexOf ("return '/chatservice/scratch/redeem?game=");
+			var request = CreateRequest (results.FollowUpUrl, Method.GET);
 
-			return indexOfRedeem >= 0;
-		}
-
-		private bool IsGameAReplay(string content)
-		{
-			var indexOfReplay = content.IndexOf ("replayUUID");
-
-			return indexOfReplay >= 0;
-		}
-
-		private string GetWinningUrl( string content )
-		{
-			var indexOfRedeem = content.IndexOf ("/chatservice/scratch/redeem?game=");
-			var indexOfSemi = content.IndexOf (";", indexOfRedeem);
-
-			return content.Substring (indexOfRedeem, indexOfSemi - indexOfRedeem - 1);
-		}
-
-		private string GetReplayUrl( string content )
-		{
-			var indexOfReplay = content.IndexOf ("/chatservice/scratch/");
-			var indexOfSemi = content.IndexOf (";", indexOfReplay);
-
-			return content.Substring (indexOfReplay, indexOfSemi - indexOfReplay - 1);
-		}	
-
-		private void ClaimPrize( string content )
-		{
-			var url = GetWinningUrl (content);
-
-			var request = CreateRequest (url, Method.GET);
-
-			var response = Client.Execute(request);
+			var response = Client.Execute (request);
 
 			// Check response and handle errors
+
+			// If the call was successful, then return the prizes
+			return results.Prizes;
 		}
 
-		private void Replay (string content)
+		private List<Prize> Replay ( ParseResults results )
 		{
-			var url = GetReplayUrl (content);
+			var prizes = new List<Prize> ();
 
-			var request = CreateRequest (url, Method.GET);
+			var request = CreateRequest (results.FollowUpUrl, Method.GET);
 
-			var response = Client.Execute(request);
+			var response = Client.Execute (request);
 
-			// Check response an handle errors
+			// Parse the results
+			var replayResults = parser.Parse(response.Content);
 
-			if (IsGameAWinner (response.Content)) {
-				ClaimPrize (response.Content);
-			} else if (IsGameAReplay (response.Content)) {
-				Replay (response.Content);
+			if (replayResults.IsWinner) {
+				// Claim Prize
+				prizes = ClaimPrize (replayResults);
+			} else if (replayResults.IsReplay) {
+				// Replay
+				prizes = Replay (replayResults);
 			}
+
+			return prizes;
 		}
 	}
 }

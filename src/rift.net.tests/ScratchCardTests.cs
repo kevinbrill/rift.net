@@ -61,8 +61,13 @@ namespace rift.net.tests
 		public void Verify_That_An_Invalid_Game_Throws_An_Exception()
 		{
 			var game = new Card () { Name = "Test", Url = "/invalid/url" };
+			var mock = new Mock<ScratchCardClient> (MockBehavior.Loose, new Session ("foo"));
 
-			Assert.That (() => client.Play (game, characterId), Throws.TypeOf<InvalidGameException> ());
+			mock.Setup (x => x.GetAccountScratchCardSummary ()).Returns (new ScratchCard () { AvailablePoints = 1, Cards = new System.Collections.Generic.List<Card>() });
+
+			var mockedClient = mock.Object;
+
+			Assert.That (() => mockedClient.Play (game, characterId), Throws.TypeOf<InvalidGameException> ());
 		}
 
 		[Test()]

@@ -50,6 +50,9 @@ namespace rift.net
 		{
 		}
 
+		/// <summary>
+		/// Lists all characters across all shards for the currently authenticated account
+		/// </summary>
 		public List<Character> ListCharacters()
 		{
 			var request = CreateRequest ("/chat/characters");
@@ -57,6 +60,9 @@ namespace rift.net
 			return ExecuteAndWrap<List<CharacterData>, List<Character>> (request);
 		}
 
+		/// <summary>
+		/// Lists all friend for the currently authenticated acount
+		/// </summary>
 		public List<Contact> ListFriends( string characterId )
 		{
 			var request = CreateRequest ("/friends");
@@ -65,6 +71,9 @@ namespace rift.net
 			return ExecuteAndWrap<List<ContactData>, List<Contact>> (request);
 		}
 
+		/// <summary>
+		/// Lists all members of the guild 
+		/// </summary>
 		public List<Contact> ListGuildmates( long guildId )
 		{
 			var request = CreateRequest ("/guild/members");

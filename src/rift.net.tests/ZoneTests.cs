@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace rift.net.tests
 {
+	[TestFixture()]
 	public class ZoneTests
 	{
 		private RiftClient client;

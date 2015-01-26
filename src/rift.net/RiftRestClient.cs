@@ -31,10 +31,15 @@ namespace rift.net
 		{
 			var response = Client.Execute(request);
 
+			if ((response == null) || (response.ResponseStatus != ResponseStatus.Completed)) {
+				throw new Exception (string.Format ("An error occurred making the call the service {0}", request.Resource), response.ErrorException);
+			}
+
 			var content = SimpleJson.DeserializeObject<JsonResponse<T>> (response.Content);
 
-			if ((content == null) || (content.status != "success"))
-				throw new Exception ("An error occurred calling the service");
+			if ((content == null) || (content.status != "success")) {
+				throw new Exception (string.Format ("An error occurred calling the service. {0}", response.Content));
+			}
 
 			return Mapper.Map<U> (content.data);
 		}

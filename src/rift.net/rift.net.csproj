@@ -72,10 +72,10 @@
     <Compile Include="ScratchCardClient.cs" />
     <Compile Include="Models\Games\ScratchCard.cs" />
     <Compile Include="Models\Games\Card.cs" />
-    <Compile Include="NoCardsAvailableException.cs" />
-    <Compile Include="InvalidGameException.cs" />
     <Compile Include="ScratchResultParser.cs" />
     <Compile Include="Models\Games\Prize.cs" />
+    <Compile Include="Exceptions\InvalidGameException.cs" />
+    <Compile Include="Exceptions\NoCardsAvailableException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -86,5 +86,6 @@
     <Folder Include="rest\" />
     <Folder Include="Models\Guilds\" />
     <Folder Include="Models\Games\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 </Project>

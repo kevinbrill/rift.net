@@ -7,6 +7,7 @@ using rift.net.Models;
 
 namespace rift.net.tests
 {
+	[TestFixture()]
 	public class ScratchCardTests
 	{
 		private ScratchCardClient client;

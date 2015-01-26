@@ -46,6 +46,7 @@ namespace rift.net.tests
 		}
 
 		[Test()]
+		[Ignore("Ignored until the feature to 'go online' with a character is added")]
 		public void Verify_That_Each_Character_Appears_Online_In_Web()
 		{
 			var characters = client.ListCharacters ();

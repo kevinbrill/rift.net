@@ -6,7 +6,7 @@ using rift.net.Models.Games;
 
 namespace rift.net
 {
-	public class ScratchResultParser
+	public class GameResultsParser
 	{
 		public CQ CDocument {
 			get;

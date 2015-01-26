@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace rift.net.Models.Games
 {
-	public class ScratchCard
+	public class AccountGameInfo
 	{
 		public int AvailablePoints {
 			get;
@@ -25,7 +25,7 @@ namespace rift.net.Models.Games
 			set;
 		}
 
-		public List<Card> Cards {
+		public List<Game> Games {
 			get;
 			set;
 		}

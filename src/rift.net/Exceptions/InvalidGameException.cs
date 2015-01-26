@@ -5,12 +5,12 @@ namespace rift.net
 {
 	public class InvalidGameException : Exception
 	{
-		public Card Game {
+		public Game Game {
 			get;
 			private set;
 		}
 
-		public InvalidGameException (Card game)
+		public InvalidGameException (Game game)
 			: base(string.Format("{0} is not a valid game.", game.Name))
 		{
 			Game = game;

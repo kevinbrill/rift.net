@@ -8,7 +8,7 @@ using rift.net.Models.Guilds;
 
 namespace rift.net.Models.Games
 {
-	public class Card
+	public class Game
 	{
 		public string Background {
 			get;

@@ -72,7 +72,7 @@ namespace rift.net
 		}
 
 		/// <summary>
-		/// Lists all members of the guild 
+		/// Lists all members of the provided guild 
 		/// </summary>
 		public List<Contact> ListGuildmates( long guildId )
 		{
@@ -82,6 +82,11 @@ namespace rift.net
 			return ExecuteAndWrap<List<ContactData>, List<Contact>> (request);
 		}
 
+		/// <summary>
+		/// Gets information on the guild to which the supplied character is a member.  
+		/// This information includes wall posts, the message of the day, the level,
+		/// and shard
+		/// </summary>
 		public Info GetGuildInfo( string characterId )
 		{
 			var request = CreateRequest ("/guild/info");

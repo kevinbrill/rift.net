@@ -46,8 +46,8 @@
     <Compile Include="ShardTests.cs" />
     <Compile Include="GuildMateTest.cs" />
     <Compile Include="ZoneTests.cs" />
-    <Compile Include="ScratchCardTests.cs" />
-    <Compile Include="ScratchCardParserTests.cs" />
+    <Compile Include="GameResultsParserTests.cs" />
+    <Compile Include="GameTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

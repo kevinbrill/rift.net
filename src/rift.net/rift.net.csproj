@@ -70,12 +70,12 @@
     <Compile Include="rest\ScratchCardData.cs" />
     <Compile Include="RiftRestClientSecured.cs" />
     <Compile Include="ScratchCardClient.cs" />
-    <Compile Include="Models\Games\ScratchCard.cs" />
-    <Compile Include="Models\Games\Card.cs" />
-    <Compile Include="ScratchResultParser.cs" />
     <Compile Include="Models\Games\Prize.cs" />
     <Compile Include="Exceptions\InvalidGameException.cs" />
     <Compile Include="Exceptions\NoCardsAvailableException.cs" />
+    <Compile Include="Models\Games\Game.cs" />
+    <Compile Include="Models\Games\AccountGameInfo.cs" />
+    <Compile Include="GameResultsParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -8,7 +8,7 @@ using rift.net.Models;
 namespace rift.net.tests
 {
 	[TestFixture()]
-	public class ScratchCardTests
+	public class GameTests
 	{
 		private ScratchCardClient client;
 		private long guildId;
@@ -34,7 +34,7 @@ namespace rift.net.tests
 		[Test()]
 		public void List_Scratch_Cards_Should_Return_Back_A_Non_Null_Non_Empty_List()
 		{
-			var cards = client.ListScratchCards ();
+			var cards = client.ListGames ();
 
 			Assert.That (cards, Is.Not.Null.And.Not.Empty);
 		}
@@ -42,7 +42,7 @@ namespace rift.net.tests
 		[Test()]
 		public void Scratch_Cards_Should_Have_At_Least_Three_Games()
 		{
-			var cards = client.ListScratchCards ();
+			var cards = client.ListGames ();
 
 			Assert.That (cards, Is.Not.Null.And.Not.Empty);
 			Assert.That (cards.Count, Is.AtLeast (3));		
@@ -53,7 +53,7 @@ namespace rift.net.tests
 		[TestCase("Shinies")]
 		public void Verify_That_Standard_Card_Games_Exist( string gameName )
 		{
-			var cards = client.ListScratchCards ();
+			var cards = client.ListGames ();
 
 			Assert.That (cards.FirstOrDefault (x => x.Name == gameName), Is.Not.Null);
 		}
@@ -61,10 +61,10 @@ namespace rift.net.tests
 		[Test()]
 		public void Verify_That_An_Invalid_Game_Throws_An_Exception()
 		{
-			var game = new Card () { Name = "Test", Url = "/invalid/url" };
+			var game = new Game () { Name = "Test", Url = "/invalid/url" };
 			var mock = new Mock<ScratchCardClient> (MockBehavior.Loose, new Session ("foo"));
 
-			mock.Setup (x => x.GetAccountScratchCardSummary ()).Returns (new ScratchCard () { AvailablePoints = 1, Cards = new System.Collections.Generic.List<Card>() });
+			mock.Setup (x => x.GetAccountGameInfo ()).Returns (new AccountGameInfo () { AvailablePoints = 1, Games = new System.Collections.Generic.List<Game>() });
 
 			var mockedClient = mock.Object;
 
@@ -74,10 +74,10 @@ namespace rift.net.tests
 		[Test()]
 		public void Verify_That_Being_Out_Of_Points_Throws_An_Exception()
 		{
-			var game = new Card () { Name = "Test", Url = "/invalid/url" };
+			var game = new Game () { Name = "Test", Url = "/invalid/url" };
 			var mock = new Mock<ScratchCardClient> (MockBehavior.Loose, new Session ("foo"));
 
-			mock.Setup (x => x.GetAccountScratchCardSummary ()).Returns (new ScratchCard () { AvailablePoints = 0 });
+			mock.Setup (x => x.GetAccountGameInfo ()).Returns (new AccountGameInfo () { AvailablePoints = 0 });
 
 			var mockedClient = mock.Object;
 
@@ -88,7 +88,7 @@ namespace rift.net.tests
 		[Ignore()]
 		public void Verify_Play()
 		{
-			var card = new Card () { Name = "Shinies", Url = "/chatservice/scratch/threeofsix" };
+			var card = new Game () { Name = "Shinies", Url = "/chatservice/scratch/threeofsix" };
 
 			client.Play (card, characterId);
 		}

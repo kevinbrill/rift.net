@@ -11,44 +11,45 @@ namespace rift.net
 {
 	public class ScratchCardClient : RiftClientSecured
 	{
-		private ScratchResultParser parser = new ScratchResultParser ();
+		private GameResultsParser parser = new GameResultsParser ();
 
 		static ScratchCardClient ()
 		{
-			Mapper.CreateMap<ScratchCardData, Card> ();
-			Mapper.CreateMap<AccountScratchCardData, ScratchCard> ()
-				.ForMember (x => x.MaximumPoints, y => y.MapFrom (src => src.maxPoints));
+			Mapper.CreateMap<ScratchCardData, Game> ();
+			Mapper.CreateMap<AccountScratchCardData, AccountGameInfo> ()
+				.ForMember (x => x.MaximumPoints, y => y.MapFrom (src => src.maxPoints))
+				.ForMember (x => x.Games, y => y.MapFrom (src => src.cards));
 		}
 
 		public ScratchCardClient (Session session) : base(session)
 		{
 		}
 
-		public virtual ScratchCard GetAccountScratchCardSummary()
+		public virtual AccountGameInfo GetAccountGameInfo()
 		{
 			var request = CreateRequest ("/scratch/cards");
 
-			return ExecuteAndWrap<AccountScratchCardData, ScratchCard> (request);
+			return ExecuteAndWrap<AccountScratchCardData, AccountGameInfo> (request);
 		}
 
-		public List<Card> ListScratchCards()
+		public List<Game> ListGames()
 		{
 			var request = CreateRequest ("/scratch/cards");
 
-			var scratchSummary = ExecuteAndWrap<AccountScratchCardData, ScratchCard> (request);
+			var scratchSummary = ExecuteAndWrap<AccountScratchCardData, AccountGameInfo> (request);
 
-			return scratchSummary.Cards;
+			return scratchSummary.Games;
 		}
 
-		public List<Prize> Play( Card card, string characterId )
+		public List<Prize> Play( Game card, string characterId )
 		{
 			List<Prize> prizes = new List<Prize> ();
-			var accountStatus = GetAccountScratchCardSummary ();
+			var accountStatus = GetAccountGameInfo ();
 
 			if (accountStatus.AvailablePoints <= 0)
 				throw new NoCardsAvailableException (accountStatus.SecondsUntilNextPoint);
 
-			var selectedGame = accountStatus.Cards.FirstOrDefault (x => x.Url == card.Url);
+			var selectedGame = accountStatus.Games.FirstOrDefault (x => x.Url == card.Url);
 
 			if (selectedGame == null)
 				throw new InvalidGameException (card);

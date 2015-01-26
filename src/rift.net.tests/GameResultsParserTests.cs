@@ -5,14 +5,14 @@ using System.IO;
 namespace rift.net.tests
 {
 	[TestFixture()]
-	public class ScratchCardParserTests
+	public class GameResultsParserTests
 	{
 		[Test()]
 		public void Verify_That_A_Loser_Is_A_Loser()
 		{
 			var contents = LoadFile ("ScratchResults/loser.html");
 
-			var parser = new ScratchResultParser ();
+			var parser = new GameResultsParser ();
 
 			var results = parser.Parse (contents);
 
@@ -26,7 +26,7 @@ namespace rift.net.tests
 			const string redeemUrl = "/chatservice/scratch/redeem?game=94cd033c-ef95-4186-9b4c-062998d7fbb5";
 			var contents = LoadFile ("ScratchResults/winner.html");
 
-			var parser = new ScratchResultParser ();
+			var parser = new GameResultsParser ();
 
 			var results = parser.Parse (contents);
 
@@ -44,7 +44,7 @@ namespace rift.net.tests
 
 			var contents = LoadFile ("ScratchResults/replay.html");
 
-			var parser = new ScratchResultParser ();
+			var parser = new GameResultsParser ();
 
 			var results = parser.Parse (contents);
 

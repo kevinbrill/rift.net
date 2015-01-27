@@ -80,6 +80,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="rift.net.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

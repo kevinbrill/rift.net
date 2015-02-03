@@ -10,7 +10,7 @@ namespace rift.net.tests
 	[TestFixture()]
 	public class GameTests
 	{
-		private ScratchCardClient client;
+		private ScratchGameClient client;
 		private long guildId;
 		private string characterId;
 
@@ -28,7 +28,7 @@ namespace rift.net.tests
 
 			var session = sessionFactory.Login (username, password);
 
-			client = new ScratchCardClient (session);
+			client = new ScratchGameClient (session);
 		}
 
 		[Test()]
@@ -62,7 +62,7 @@ namespace rift.net.tests
 		public void Verify_That_An_Invalid_Game_Throws_An_Exception()
 		{
 			var game = new Game () { Name = "Test", Url = "/invalid/url" };
-			var mock = new Mock<ScratchCardClient> (MockBehavior.Loose, new Session ("foo"));
+			var mock = new Mock<ScratchGameClient> (MockBehavior.Loose, new Session ("foo"));
 
 			mock.Setup (x => x.GetAccountGameInfo ()).Returns (new AccountGameInfo () { AvailablePoints = 1, Games = new System.Collections.Generic.List<Game>() });
 
@@ -75,7 +75,7 @@ namespace rift.net.tests
 		public void Verify_That_Being_Out_Of_Points_Throws_An_Exception()
 		{
 			var game = new Game () { Name = "Test", Url = "/invalid/url" };
-			var mock = new Mock<ScratchCardClient> (MockBehavior.Loose, new Session ("foo"));
+			var mock = new Mock<ScratchGameClient> (MockBehavior.Loose, new Session ("foo"));
 
 			mock.Setup (x => x.GetAccountGameInfo ()).Returns (new AccountGameInfo () { AvailablePoints = 0 });
 

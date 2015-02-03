@@ -71,7 +71,6 @@
     <Compile Include="rest\GuildData.cs" />
     <Compile Include="rest\ScratchCardData.cs" />
     <Compile Include="RiftRestClientSecured.cs" />
-    <Compile Include="ScratchCardClient.cs" />
     <Compile Include="Models\Games\Prize.cs" />
     <Compile Include="Exceptions\InvalidGameException.cs" />
     <Compile Include="Exceptions\NoCardsAvailableException.cs" />
@@ -80,6 +79,7 @@
     <Compile Include="GameResultsParser.cs" />
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\InvalidSessionException.cs" />
+    <Compile Include="ScratchGameClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -101,7 +101,7 @@ The games are wrapped in the ScratchCardClient class, which is constructed in th
 	var session = sessionFactory.Login (username, password);
 	
 	// Create a new secured client 
-	var client = new ScratchCardClient (session);
+	var client = new ScratchGameClient (session);
 	
 	// Get the user's game information
 	var info = client.GetAccountGameInfo();

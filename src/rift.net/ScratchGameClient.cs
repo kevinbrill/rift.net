@@ -9,11 +9,11 @@ using rift.net.rest;
 
 namespace rift.net
 {
-	public class ScratchCardClient : RiftClientSecured
+	public class ScratchGameClient : RiftClientSecured
 	{
 		private GameResultsParser parser = new GameResultsParser ();
 
-		static ScratchCardClient ()
+		static ScratchGameClient ()
 		{
 			Mapper.CreateMap<ScratchCardData, Game> ();
 			Mapper.CreateMap<AccountScratchCardData, AccountGameInfo> ()
@@ -21,7 +21,7 @@ namespace rift.net
 				.ForMember (x => x.Games, y => y.MapFrom (src => src.cards));
 		}
 
-		public ScratchCardClient (Session session) : base(session)
+		public ScratchGameClient (Session session) : base(session)
 		{
 		}
 

@@ -25,8 +25,11 @@ namespace rift.net
 
 			var response = restClient.Execute (request);
 
-			if (response.StatusCode != System.Net.HttpStatusCode.OK)
-				throw new AccessViolationException ();
+			if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+				throw new AuthenticationException (username);
+			} else if (response.ErrorException != null) {
+				throw response.ErrorException;
+			}
 
 			restClient.BaseUrl = new Uri (loginUrl);
 
@@ -38,7 +41,7 @@ namespace rift.net
 			var cookie = response.Cookies.FirstOrDefault (x => x.Name == "SESSIONID");
 
 			if (cookie == null)
-				throw new AccessViolationException ();
+				throw new InvalidSessionException ();
 
 			var session = new Session (cookie.Value);
 

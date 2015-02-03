@@ -17,7 +17,7 @@ namespace rift.net.tests
 			var session = security.Login (username, password);
 
 			Assert.That (session, Is.Not.Null);
-			//Assert.That (session.Id, Is.Not.Null.And.Not.Empty);
+			Assert.That (session.Id, Is.Not.Null.And.Not.Empty);
 		}
 
 		[Test()]
@@ -25,7 +25,7 @@ namespace rift.net.tests
 		{
 			var security = new SessionFactory ();
 
-			Assert.That ( () => security.Login ("foo@bar.com", "foo"), Throws.TypeOf<AccessViolationException>());
+			Assert.That ( () => security.Login ("foo@bar.com", "foo"), Throws.TypeOf<AuthenticationException>());
 		}
 	}
 }

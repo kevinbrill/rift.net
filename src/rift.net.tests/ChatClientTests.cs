@@ -33,7 +33,9 @@ namespace rift.net.tests
 		[Test()]
 		public void Verify_Starting_Chat_Client()
 		{
-			client.Start ();
+		    client.Connect();
+
+			client.Listen ();
 
 			client.Stop ();
 		}

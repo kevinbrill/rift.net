@@ -5,16 +5,20 @@ using System.Net;
 using System.IO;
 using AutoMapper;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace rift.net
 {
 	public class RiftChatClient : RiftRestClientSecured
 	{
-		private Character character;
+		private readonly Character character;
 		private List<Contact> guildMates = new List<Contact>();
 		private List<Contact> friends = new List<Contact>();
 		private Stream stream;
+
+	    private event EventHandler Disconnected;
 
 		static RiftChatClient()
 		{
@@ -28,18 +32,26 @@ namespace rift.net
 		public RiftChatClient (Session session, Character character) : base(session)
 		{
 			this.character = character;
-
-			var securedClient = new RiftClientSecured (session);
-
-			// Get the character's friends
-			this.friends = securedClient.ListFriends (this.character.Id);
-
-			// If the character is valid, then grab the guild mates
-			if (this.character.Guild != null) 
-			{
-				guildMates = securedClient.ListGuildmates (this.character.Guild.Id);
-			}
 		}
+
+	    public bool Connect()
+	    {
+            var securedClient = new RiftClientSecured(session);
+
+            // Go online
+	        securedClient.GoOnline(character.Id);
+
+            // Get the character's friends
+            friends = securedClient.ListFriends(character.Id);
+
+            // If the character is valid, then grab the guild mates
+            if (character.Guild != null)
+            {
+                guildMates = securedClient.ListGuildmates(character.Guild.Id);
+            }
+
+	        return true;
+	    }
 
 		public List<Message> ListChatHistory()
 		{
@@ -57,13 +69,9 @@ namespace rift.net
 			return ExecuteAndWrap<List<ChatData>, List<Message>> (request);
 		}
 
-		public void Start()
+		public void Listen()
 		{
 			var parser = new ChatMessageParser ();
-			var selectCharacterRequest = CreateRequest ("/selectCharacter", Method.GET);
-			selectCharacterRequest.AddQueryParameter ("characterId", character.Id);
-
-			var response = Client.Execute (selectCharacterRequest);
 
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Client.BaseUrl + "/servlet/chatlisten" );
 			request.UserAgent = "trion/mobile";
@@ -75,48 +83,77 @@ namespace rift.net
 			request.CookieContainer = new CookieContainer ();
 			request.CookieContainer.Add (new Cookie ("SESSIONID", session.Id, "", Client.BaseUrl.Host));
 
-			stream = request.GetResponse().GetResponseStream();
+		    try
+		    {
+                var buffer = new char[4096];
 
-			var encode = System.Text.Encoding.GetEncoding ("utf-8");
+                // Handle a forceful disconnect
+		        Disconnected += OnDisconnected;
 
-			var readStream = new StreamReader (stream, encode);
+                // Open up the response stream
+                stream = request.GetResponse().GetResponseStream();
 
-			var buffer = new char[4096];
-			var bytesRead = readStream.Read (buffer, 0, buffer.Length);
+                // Create a stream reader and...
+                var readStream = new StreamReader(stream, Encoding.GetEncoding("utf-8"));                
 
-			while (bytesRead > 0) {
-				System.Diagnostics.Debug.WriteLine ("Message Received");
+                // Read it into a buffer
+                var bytesRead = readStream.Read(buffer, 0, buffer.Length);
 
-				// Convert the contents of the buffer into a string
-				var stringified = new String (buffer, 0, buffer.Length);
+                while (bytesRead > 0)
+                {
+                    // Convert the contents of the buffer into a string
+                    var stringified = new String(buffer, 0, buffer.Length);
 
-				// Parse the response
-				var parsedResponse = parser.Parse (stringified);
+                    // Parse the response
+                    var parsedResponse = parser.Parse(stringified);
 
-				// Handle the message type
-				if (parsedResponse is LoginLogoutData) {
-					HandleLoginLogout (parsedResponse as LoginLogoutData);
-				} else if (parsedResponse is ChatData) {
-					HandleMessage (parsedResponse as ChatData);
-				}
+                    // Handle the message type
+                    if (parsedResponse is LoginLogoutData)
+                    {
+                        HandleLoginLogout(parsedResponse as LoginLogoutData);
+                    }
+                    else if (parsedResponse is ChatData)
+                    {
+                        HandleMessage(parsedResponse as ChatData);
+                    }
 
-				// Message received.  Clear the buffer
-				Array.Clear (buffer, 0, buffer.Length);
+                    // Message received.  Clear the buffer
+                    Array.Clear(buffer, 0, buffer.Length);
 
-				// Wait for the next message
-				bytesRead = readStream.Read (buffer, 0, buffer.Length);
-			}
+                    // Wait for the next message
+                    bytesRead = readStream.Read(buffer, 0, buffer.Length);
+                }
+		    }
+		    catch (Exception exception)
+		    {
+                Debug.WriteLine(exception.ToString());
+
+		        if (Disconnected != null)
+		            Disconnected(this, new EventArgs());
+		    }
 		}
 
 		public void Stop()
 		{
-			if (this.stream != null) {
-				this.stream.Dispose ();
-				this.stream = null;
-			}
+		    if (Disconnected != null)
+		        Disconnected -= OnDisconnected;
+
+		    if (stream == null) return;
+
+		    stream.Dispose ();
+		    stream = null;
 		}
 
-		protected override RestRequest CreateRequest( string url, Method method = Method.GET)
+	    private void OnDisconnected(object sender, EventArgs eventArgs)
+	    {
+            // Stop the stream
+            Stop();
+
+            // Start the stream
+            Listen();
+        }
+
+	    protected override RestRequest CreateRequest( string url, Method method = Method.GET)
 		{
 			var request = base.CreateRequest (url, method);
 
@@ -127,7 +164,7 @@ namespace rift.net
 
 		private rift.net.Models.Action HandleLoginLogout( LoginLogoutData data )
 		{
-			var action = new rift.net.Models.Action ();
+			var action = new Models.Action ();
 
 			var characterId = data.characterId.ToString ();
 
@@ -135,12 +172,17 @@ namespace rift.net
 			action.InGame = data.game;
 			action.Character = guildMates.FirstOrDefault (x => x.Id == characterId) ?? friends.FirstOrDefault (x => x.Id == characterId);
 
+		    Debug.WriteLine("{0}\t{1} has just {2}", DateTime.Now.ToShortTimeString(), action.Character.FullName,
+		        action.State == StateAction.Login ? "logged in" : "logged out");
+
 			return action;
 		}
 
 		private Message HandleMessage( ChatData data )
 		{
 			var message = Mapper.Map<ChatData, Message> (data);
+
+		    Debug.WriteLine("{0}\t{1}: {2}", DateTime.Now.ToShortTimeString(), message.Sender.Name, message.Text);
 
 			return message;
 		}

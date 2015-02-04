@@ -18,6 +18,8 @@ namespace rift.net.tests
 
 		const string guild_chat = "{\"type\":\"GuildChat\",\"value\":{\"messageId\":\"417747648\",\"recipientId\":219691219334217446,\"messageTime\":1423070407,\"senderId\":218846794414042822,\"senderName\":\"Bruun\",\"message\":\"This is a test\"}}";
 
+        const string whisper_chat = "{\"type\":\"WhisperChat\",\"value\":{\"messageId\":\"417747648\",\"recipientId\":218846794414042821,\"messageTime\":1423070407,\"senderId\":218846794414042822,\"senderName\":\"Bruun\",\"message\":\"Hello handsome\"}}";
+
 		ChatMessageParser parser = new ChatMessageParser();
 
 		[Test()]
@@ -82,6 +84,24 @@ namespace rift.net.tests
 			Assert.That (chatData.senderId, Is.EqualTo (charactedId));
 			Assert.That (chatData.senderName, Is.EqualTo ("Bruun"));
 		}
+
+        [Test()]
+        public void Verify_That_Whisper_Chat_Parses_Properly()
+        {
+            var data = parser.Parse(whisper_chat);
+
+            Assert.That(data, Is.Not.Null);
+            Assert.That(data, Is.InstanceOf<ChatData>());
+
+            var chatData = (ChatData)data;
+
+            Assert.That(chatData.recipientId, Is.EqualTo(218846794414042821));
+            Assert.That(chatData.message, Is.Not.Null.And.EqualTo("Hello handsome"));
+            Assert.That(chatData.messageId, Is.Not.Null.And.Not.Empty);
+            Assert.That(chatData.messageTime, Is.GreaterThan(0));
+            Assert.That(chatData.senderId, Is.EqualTo(charactedId));
+            Assert.That(chatData.senderName, Is.EqualTo("Bruun"));
+        }
 	}
 }
 

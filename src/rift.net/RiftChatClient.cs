@@ -78,58 +78,61 @@ namespace rift.net
 			request.ProtocolVersion = HttpVersion.Version11;
 			request.Method = WebRequestMethods.Http.Get;
 			request.KeepAlive = true;
-			request.Timeout = int.MaxValue;
 
 			request.CookieContainer = new CookieContainer ();
 			request.CookieContainer.Add (new Cookie ("SESSIONID", session.Id, "", Client.BaseUrl.Host));
 
 		    try
 		    {
-                var buffer = new char[4096];
+		        var buffer = new char[4096];
 
-                // Handle a forceful disconnect
+		        // Handle a forceful disconnect
 		        Disconnected += OnDisconnected;
 
-                // Open up the response stream
-                stream = request.GetResponse().GetResponseStream();
+		        // Open up the response stream
+		        stream = request.GetResponse().GetResponseStream();
 
-                // Create a stream reader and...
-                var readStream = new StreamReader(stream, Encoding.GetEncoding("utf-8"));                
+		        // Create a stream reader and...
+		        var readStream = new StreamReader(stream, Encoding.GetEncoding("utf-8"));
 
-                // Read it into a buffer
-                var bytesRead = readStream.Read(buffer, 0, buffer.Length);
+		        // Read it into a buffer
+		        var bytesRead = readStream.Read(buffer, 0, buffer.Length);
 
-                while (bytesRead > 0)
-                {
-                    // Convert the contents of the buffer into a string
-                    var stringified = new String(buffer, 0, buffer.Length);
+		        while (bytesRead > 0)
+		        {
+		            // Convert the contents of the buffer into a string
+		            var stringified = new String(buffer, 0, buffer.Length);
 
-                    // Parse the response
-                    var parsedResponse = parser.Parse(stringified);
+		            // Parse the response
+		            var parsedResponse = parser.Parse(stringified);
 
-                    // Handle the message type
-                    if (parsedResponse is LoginLogoutData)
-                    {
-                        HandleLoginLogout(parsedResponse as LoginLogoutData);
-                    }
-                    else if (parsedResponse is ChatData)
-                    {
-                        HandleMessage(parsedResponse as ChatData);
-                    }
+		            // Handle the message type
+		            if (parsedResponse is LoginLogoutData)
+		            {
+		                HandleLoginLogout(parsedResponse as LoginLogoutData);
+		            }
+		            else if (parsedResponse is ChatData)
+		            {
+		                HandleMessage(parsedResponse as ChatData);
+		            }
 
-                    // Message received.  Clear the buffer
-                    Array.Clear(buffer, 0, buffer.Length);
+		            // Message received.  Clear the buffer
+		            Array.Clear(buffer, 0, buffer.Length);
 
-                    // Wait for the next message
-                    bytesRead = readStream.Read(buffer, 0, buffer.Length);
-                }
+		            // Wait for the next message
+		            bytesRead = readStream.Read(buffer, 0, buffer.Length);
+		        }
 		    }
 		    catch (Exception exception)
 		    {
-                Debug.WriteLine(exception.ToString());
-
-		        if (Disconnected != null)
-		            Disconnected(this, new EventArgs());
+		        Debug.WriteLine(exception.ToString());
+		    }
+		    finally
+		    {
+                // If we've reached this point, then we've timed out or had an exception.  
+                //  Go ahead and reconnect
+                if (Disconnected != null)
+                    Disconnected(this, new EventArgs());
 		    }
 		}
 
@@ -139,6 +142,8 @@ namespace rift.net
 		        Disconnected -= OnDisconnected;
 
 		    if (stream == null) return;
+
+            Debug.WriteLine("All done listening.  Have a nice day!");
 
 		    stream.Dispose ();
 		    stream = null;
@@ -172,7 +177,9 @@ namespace rift.net
 			action.InGame = data.game;
 			action.Character = guildMates.FirstOrDefault (x => x.Id == characterId) ?? friends.FirstOrDefault (x => x.Id == characterId);
 
-		    Debug.WriteLine("{0}\t{1} has just {2}", DateTime.Now.ToShortTimeString(), action.Character.FullName,
+		    Debug.WriteLine("{0}\t{1}{2} has just {3}", DateTime.Now.ToShortTimeString(),
+		        action.Character.FullName,
+		        action.Character.Guild != null ? string.Format(" <{0}>", action.Character.Guild.Name) : "",
 		        action.State == StateAction.Login ? "logged in" : "logged out");
 
 			return action;

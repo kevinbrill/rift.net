@@ -10,7 +10,6 @@ namespace rift.net.tests
 	public class ChatClientTests
 	{
 		private RiftChatClient client;
-		private string characterId;
 		private Character character;
 
 		[TestFixtureSetUp()]
@@ -18,20 +17,21 @@ namespace rift.net.tests
 		{
 			var username = ConfigurationManager.AppSettings ["username"];
 			var password = ConfigurationManager.AppSettings ["password"];
-			characterId = ConfigurationManager.AppSettings ["characterId"];
+			var characterName = ConfigurationManager.AppSettings ["characterName"];
 
 			var sessionFactory = new SessionFactory ();
 
 			var session = sessionFactory.Login (username, password);
 
-			client = new RiftChatClient (session, characterId);
-
 			var securedClient = new RiftClientSecured (session);
 
-			character = securedClient.ListCharacters ().FirstOrDefault (x => x.Id == characterId);
+			character = securedClient.ListCharacters ().FirstOrDefault (x => x.FullName == characterName);
+
+			client = new RiftChatClient (session, character.Id);		
 		}
 
 		[Test()]
+		[Ignore()]
 		public void Verify_Starting_Chat_Client()
 		{
 			client.Start ();
@@ -40,19 +40,21 @@ namespace rift.net.tests
 		[Test()]
 		public void Verify_That_Character_Has_Chat_History()
 		{
-			var chatHistory = client.ListChatHistory(characterId);
+			Assume.That (character, Is.Not.Null);
+
+			var chatHistory = client.ListChatHistory(character.Id);
 
 			Assert.That (chatHistory, Is.Not.Null.And.Not.Empty);
-			Assert.That (chatHistory.All (x => x.RecipientId.ToString() == characterId), Is.True);
+			Assert.That (chatHistory.All (x => x.RecipientId.ToString() == character.Id), Is.True);
 		}
 
 		[Test()]
 		public void Verify_That_Character_Guild_Has_Chat_History()
 		{
 			Assume.That (character, Is.Not.Null);
-			Assume.That (character.Guild, Is.Not.Null);
+			Assume.That (character.Guild, Is.Not.Null, "The provided character is not a member of a guild");
 
-			var chatHistory = client.ListGuildChatHistory(characterId);
+			var chatHistory = client.ListGuildChatHistory(character.Id);
 
 			Assert.That (chatHistory, Is.Not.Null.And.Not.Empty);
 			Assert.That (chatHistory.All (x => x.RecipientId == character.Guild.Id), Is.True);

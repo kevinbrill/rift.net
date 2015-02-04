@@ -81,6 +81,9 @@
     <Compile Include="Exceptions\InvalidSessionException.cs" />
     <Compile Include="ScratchGameClient.cs" />
     <Compile Include="RiftChatClient.cs" />
+    <Compile Include="Models\Chat\Message.cs" />
+    <Compile Include="Models\Chat\Sender.cs" />
+    <Compile Include="rest\ChatData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -101,5 +104,6 @@
     <Folder Include="Models\Guilds\" />
     <Folder Include="Models\Games\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="Models\Chat\" />
   </ItemGroup>
 </Project>

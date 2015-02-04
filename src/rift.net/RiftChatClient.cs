@@ -3,18 +3,43 @@ using rift.net.Models;
 using RestSharp;
 using System.Net;
 using System.IO;
+using AutoMapper;
+using System.Collections.Generic;
 
 namespace rift.net
 {
-	public class RiftChatClient : RiftRestClient
+	public class RiftChatClient : RiftRestClientSecured
 	{
-		private Session session;
 		private string characterId;
 
-		public RiftChatClient (Session session, string characterId)
+		static RiftChatClient()
 		{
-			this.session = session;
+			Mapper.CreateMap<ChatData, Message> ()
+				.ForMember (x => x.Id, y => y.MapFrom (src => src.messageId))
+				.ForMember (x => x.Sender, y => y.MapFrom (src => new Sender{ Id = src.senderId, Name = src.senderName }))
+				.ForMember (x => x.Text, y => y.MapFrom (src => src.message))
+				.ForMember (x => x.ReceiveDateTime, y => y.MapFrom (src => new DateTime (1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds (src.messageTime).ToLocalTime ()));
+		}
+
+		public RiftChatClient (Session session, string characterId) : base(session)
+		{
 			this.characterId = characterId;
+		}
+
+		public List<Message> ListChatHistory(string characterId)
+		{
+			var request = CreateRequest ("/chat/list");
+			request.AddQueryParameter ("characterId", characterId);
+
+			return ExecuteAndWrap<List<ChatData>, List<Message>> (request);
+		}
+
+		public List<Message> ListGuildChatHistory(string characterId)
+		{
+			var request = CreateRequest ("/guild/listChat");
+			request.AddQueryParameter ("characterId", characterId);
+
+			return ExecuteAndWrap<List<ChatData>, List<Message>> (request);
 		}
 
 		public void Start()

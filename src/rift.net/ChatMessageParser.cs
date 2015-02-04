@@ -35,8 +35,9 @@ namespace rift.net
 				parsedObject = ParseLoginLogOutMessage (value, false);
 				break;
 			case "GuildChat":
-				parsedObject = ParseGuildChat (value);
-				break;
+            case "WhisperChat":
+				parsedObject = ParseChat (value);
+				break;                
 			}
 
 			return parsedObject;
@@ -56,7 +57,7 @@ namespace rift.net
 			return data;
 		}
 
-		private ChatData ParseGuildChat( JsonObject jsonObject )
+		private ChatData ParseChat( JsonObject jsonObject )
 		{
 			return SimpleJson.DeserializeObject<ChatData> (jsonObject.ToString());
 		}

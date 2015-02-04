@@ -51,6 +51,7 @@
     <Compile Include="GameResultsParserTests.cs" />
     <Compile Include="GameTests.cs" />
     <Compile Include="ChatClientTests.cs" />
+    <Compile Include="ChatParserTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

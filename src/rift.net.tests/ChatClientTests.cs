@@ -27,14 +27,15 @@ namespace rift.net.tests
 
 			character = securedClient.ListCharacters ().FirstOrDefault (x => x.FullName == characterName);
 
-			client = new RiftChatClient (session, character.Id);		
+			client = new RiftChatClient (session, character);		
 		}
 
 		[Test()]
-		[Ignore()]
 		public void Verify_Starting_Chat_Client()
 		{
 			client.Start ();
+
+			client.Stop ();
 		}
 
 		[Test()]
@@ -42,7 +43,7 @@ namespace rift.net.tests
 		{
 			Assume.That (character, Is.Not.Null);
 
-			var chatHistory = client.ListChatHistory(character.Id);
+			var chatHistory = client.ListChatHistory();
 
 			Assert.That (chatHistory, Is.Not.Null.And.Not.Empty);
 			Assert.That (chatHistory.All (x => x.RecipientId.ToString() == character.Id), Is.True);
@@ -54,7 +55,7 @@ namespace rift.net.tests
 			Assume.That (character, Is.Not.Null);
 			Assume.That (character.Guild, Is.Not.Null, "The provided character is not a member of a guild");
 
-			var chatHistory = client.ListGuildChatHistory(character.Id);
+			var chatHistory = client.ListGuildChatHistory();
 
 			Assert.That (chatHistory, Is.Not.Null.And.Not.Empty);
 			Assert.That (chatHistory.All (x => x.RecipientId == character.Guild.Id), Is.True);

@@ -13,7 +13,7 @@ namespace rift.net
 		{
 			object parsedObject = null;
 
-			System.Diagnostics.Debug.WriteLine (jsonString);
+			//System.Diagnostics.Debug.WriteLine (jsonString);
 
 			// Parse the contents into JSON
 			dynamic json = SimpleJson.DeserializeObject( jsonString );			

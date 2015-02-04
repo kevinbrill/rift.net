@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using AutoMapper;
 using RestSharp;
 using rift.net.rest;
@@ -58,6 +59,21 @@ namespace rift.net
 
 			return ExecuteAndWrap<List<CharacterData>, List<Character>> (request);
 		}
+
+        /// <summary>
+        /// Logs the supplied character in.  Performing this action will change their 
+        /// web presence to online.
+        /// </summary>
+        /// <returns>True if the character was successfully logged in, false otherwise</returns>
+	    public bool GoOnline(string characterId)
+	    {
+            var selectCharacterRequest = CreateRequest("/selectCharacter", Method.GET);
+            selectCharacterRequest.AddQueryParameter("characterId", characterId);
+
+            var response = Client.Execute(selectCharacterRequest);
+
+	        return response.StatusCode == HttpStatusCode.OK;
+	    }
 
 		/// <summary>
 		/// Lists all friend for the currently authenticated acount

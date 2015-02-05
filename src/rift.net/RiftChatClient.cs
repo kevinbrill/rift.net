@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using rift.net.rest.Chat;
 using Action = rift.net.Models.Action;
+using System.Threading.Tasks;
 
 namespace rift.net
 {
@@ -77,7 +78,18 @@ namespace rift.net
 			return ExecuteAndWrap<List<ChatData>, List<Message>> (request);
 		}
 
-		public void Listen()
+		public bool SendGuildMessage( string message )
+		{
+			var request = CreateRequest ("/guild/addChat", Method.GET );
+			request.AddQueryParameter ("characterId", character.Id);
+			request.AddQueryParameter ("message", message);
+
+			var response = Client.Execute (request);
+
+			return (response.ResponseStatus == ResponseStatus.Completed);
+		}
+
+		public async Task Listen()
 		{
 			var parser = new ChatMessageParser ();
 

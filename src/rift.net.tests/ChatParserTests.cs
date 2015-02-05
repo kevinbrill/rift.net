@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using rift.net.rest.Chat;
 
 namespace rift.net.tests
 {
@@ -83,6 +84,7 @@ namespace rift.net.tests
 			Assert.That (chatData.messageTime, Is.GreaterThan (0));
 			Assert.That (chatData.senderId, Is.EqualTo (charactedId));
 			Assert.That (chatData.senderName, Is.EqualTo ("Bruun"));
+            Assert.That(chatData.ChatChannel, Is.EqualTo(ChatChannel.Guild));
 		}
 
         [Test()]
@@ -101,6 +103,7 @@ namespace rift.net.tests
             Assert.That(chatData.messageTime, Is.GreaterThan(0));
             Assert.That(chatData.senderId, Is.EqualTo(charactedId));
             Assert.That(chatData.senderName, Is.EqualTo("Bruun"));
+            Assert.That(chatData.ChatChannel, Is.EqualTo(ChatChannel.Whisper));
         }
 	}
 }

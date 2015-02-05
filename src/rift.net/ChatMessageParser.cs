@@ -1,15 +1,12 @@
 ﻿using System;
+using rift.net.rest.Chat;
 using RestSharp;
 
 namespace rift.net
 {
 	public class ChatMessageParser
 	{
-		public ChatMessageParser ()
-		{
-		}
-
-		public object Parse( string jsonString )
+	    public object Parse( string jsonString )
 		{
 			object parsedObject = null;
 
@@ -35,10 +32,15 @@ namespace rift.net
 				parsedObject = ParseLoginLogOutMessage (value, false);
 				break;
 			case "GuildChat":
+                parsedObject = ParseChat(value, ChatChannel.Guild);
+                break;
             case "WhisperChat":
-				parsedObject = ParseChat (value);
-				break;                
-			}
+				parsedObject = ParseChat (value, ChatChannel.Whisper);
+				break;
+            case "OfficerChat":
+                parsedObject = ParseChat(value, ChatChannel.Officer);
+                break;
+            }
 
 			return parsedObject;
 		}
@@ -57,9 +59,13 @@ namespace rift.net
 			return data;
 		}
 
-		private ChatData ParseChat( JsonObject jsonObject )
+		private ChatData ParseChat( JsonObject jsonObject, ChatChannel chatChannel)
 		{
-			return SimpleJson.DeserializeObject<ChatData> (jsonObject.ToString());
+		    var data = SimpleJson.DeserializeObject<ChatData>(jsonObject.ToString());
+
+		    data.ChatChannel = chatChannel;
+
+		    return data;
 		}
 	}
 }

@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using rift.net.rest.Chat;
+using Action = rift.net.Models.Action;
 
 namespace rift.net
 {
@@ -19,6 +21,12 @@ namespace rift.net
 		private Stream stream;
 
 	    private event EventHandler Disconnected;
+
+	    public event EventHandler<Message> GuildChatReceived;
+	    public event EventHandler<Message> WhisperReceived;
+	    public event EventHandler<Message> OfficerChatReceived;
+	    public event EventHandler<Action> Login;
+	    public event EventHandler<Action> Logout;
 
 		static RiftChatClient()
 		{
@@ -167,9 +175,9 @@ namespace rift.net
 			return request;
 		}
 
-		private rift.net.Models.Action HandleLoginLogout( LoginLogoutData data )
+		private void HandleLoginLogout(LoginLogoutData data)
 		{
-			var action = new Models.Action ();
+			var action = new Action ();
 
 			var characterId = data.characterId.ToString ();
 
@@ -182,16 +190,40 @@ namespace rift.net
 		        action.Character.Guild != null ? string.Format(" <{0}>", action.Character.Guild.Name) : "",
 		        action.State == StateAction.Login ? "logged in" : "logged out");
 
-			return action;
+		    switch (action.State)
+		    {
+		        case StateAction.Login:
+		            if (Login != null)
+		                Login(this, action);
+		            break;
+		        case StateAction.Logout:
+		            if (Logout != null)
+		                Logout(this, action);
+		            break;
+		    }
 		}
 
-		private Message HandleMessage( ChatData data )
+		private void HandleMessage(ChatData data)
 		{
 			var message = Mapper.Map<ChatData, Message> (data);
 
-		    Debug.WriteLine("{0}\t{1}: {2}", DateTime.Now.ToShortTimeString(), message.Sender.Name, message.Text);
+		    switch (data.ChatChannel)
+		    {
+		        case ChatChannel.Guild:
+		            if (GuildChatReceived != null)
+		                GuildChatReceived(this, message);
+                    break;
+                case ChatChannel.Officer:
+                    if (OfficerChatReceived != null)
+                        OfficerChatReceived(this, message);
+                    break;
+                case ChatChannel.Whisper:
+                    if (WhisperReceived != null)
+                        WhisperReceived(this, message);
+                    break;
+            }
 
-			return message;
+		    Debug.WriteLine("{0}\t{1}: {2}", DateTime.Now.ToShortTimeString(), message.Sender.Name, message.Text);
 		}
 	}
 }

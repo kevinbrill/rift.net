@@ -67,12 +67,27 @@ namespace rift.net
         /// <returns>True if the character was successfully logged in, false otherwise</returns>
 	    public bool GoOnline(string characterId)
 	    {
-            var selectCharacterRequest = CreateRequest("/selectCharacter", Method.GET);
-            selectCharacterRequest.AddQueryParameter("characterId", characterId);
+            var request = CreateRequest("/selectCharacter", Method.GET);
+            request.AddQueryParameter("characterId", characterId);
 
-            var response = Client.Execute(selectCharacterRequest);
+            var response = Client.Execute(request);
 
 	        return response.StatusCode == HttpStatusCode.OK;
+	    }
+
+        /// <summary>
+        /// Logs off the supplied character.  Performing this action will change their 
+        /// web presence to offline.
+        /// </summary>
+        /// <returns>True if the character was successfully logged off, false otherwise</returns>
+	    public bool GoOffline(string characterId)
+	    {
+            var request = CreateRequest("/unselectCharacter", Method.GET);
+            request.AddQueryParameter("characterId", characterId);
+
+            var response = Client.Execute(request);
+
+	        return response.StatusCode == HttpStatusCode.OK;	        
 	    }
 
 		/// <summary>

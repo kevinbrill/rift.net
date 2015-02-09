@@ -88,7 +88,20 @@ namespace rift.net
 
 			var response = Client.Execute (request);
 
-			return (response.ResponseStatus == ResponseStatus.Completed);
+			return (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == HttpStatusCode.OK);
+		}
+
+		public bool SendWhisper( Character recipient, string message )
+		{
+			var request = CreateRequest ("/chat/whisper", Method.GET);
+
+			request.AddQueryParameter ("senderId", character.Id);
+			request.AddQueryParameter ("recipientId", recipient.Id);
+			request.AddQueryParameter ("message", message);
+
+			var response = Client.Execute (request);
+
+			return (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == HttpStatusCode.OK);
 		}
 
 		public void Listen()

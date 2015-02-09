@@ -11,6 +11,7 @@ using System.Text;
 using rift.net.rest.Chat;
 using Action = rift.net.Models.Action;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace rift.net
 {
@@ -20,6 +21,7 @@ namespace rift.net
 		private List<Contact> guildMates = new List<Contact>();
 		private List<Contact> friends = new List<Contact>();
 		private Stream stream;
+		private Thread thread;
 
 	    private event EventHandler Disconnected;
 
@@ -89,71 +91,13 @@ namespace rift.net
 			return (response.ResponseStatus == ResponseStatus.Completed);
 		}
 
-		public async Task Listen()
+		public void Listen()
 		{
-			var parser = new ChatMessageParser ();
+			Stop ();
 
-			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Client.BaseUrl + "/servlet/chatlisten" );
-			request.UserAgent = "trion/mobile";
-			request.ProtocolVersion = HttpVersion.Version11;
-			request.Method = WebRequestMethods.Http.Get;
-			request.KeepAlive = true;
+			thread = new Thread (new ThreadStart (ListenToChatStream));
 
-			request.CookieContainer = new CookieContainer ();
-			request.CookieContainer.Add (new Cookie ("SESSIONID", session.Id, "", Client.BaseUrl.Host));
-
-		    try
-		    {
-		        var buffer = new char[4096];
-
-		        // Handle a forceful disconnect
-		        Disconnected += OnDisconnected;
-
-		        // Open up the response stream
-		        stream = request.GetResponse().GetResponseStream();
-
-		        // Create a stream reader and...
-		        var readStream = new StreamReader(stream, Encoding.GetEncoding("utf-8"));
-
-		        // Read it into a buffer
-		        var bytesRead = readStream.Read(buffer, 0, buffer.Length);
-
-		        while (bytesRead > 0)
-		        {
-		            // Convert the contents of the buffer into a string
-		            var stringified = new String(buffer, 0, buffer.Length);
-
-		            // Parse the response
-		            var parsedResponse = parser.Parse(stringified);
-
-		            // Handle the message type
-		            if (parsedResponse is LoginLogoutData)
-		            {
-		                HandleLoginLogout(parsedResponse as LoginLogoutData);
-		            }
-		            else if (parsedResponse is ChatData)
-		            {
-		                HandleMessage(parsedResponse as ChatData);
-		            }
-
-		            // Message received.  Clear the buffer
-		            Array.Clear(buffer, 0, buffer.Length);
-
-		            // Wait for the next message
-		            bytesRead = readStream.Read(buffer, 0, buffer.Length);
-		        }
-		    }
-		    catch (Exception exception)
-		    {
-		        Debug.WriteLine(exception.ToString());
-		    }
-		    finally
-		    {
-                // If we've reached this point, then we've timed out or had an exception.  
-                //  Go ahead and reconnect
-                if (Disconnected != null)
-                    Disconnected(this, new EventArgs());
-		    }
+			thread.Start ();		
 		}
 
 		public void Stop()
@@ -165,7 +109,9 @@ namespace rift.net
 
             Debug.WriteLine("All done listening.  Have a nice day!");
 
+			stream.Close ();
 		    stream.Dispose ();
+
 		    stream = null;
 		}
 
@@ -236,6 +182,73 @@ namespace rift.net
             }
 
 		    Debug.WriteLine("{0}\t{1}: {2}", DateTime.Now.ToShortTimeString(), message.Sender.Name, message.Text);
+		}
+
+		private void ListenToChatStream()
+		{
+			var parser = new ChatMessageParser ();
+
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Client.BaseUrl + "/servlet/chatlisten" );
+			request.UserAgent = "trion/mobile";
+			request.ProtocolVersion = HttpVersion.Version11;
+			request.Method = WebRequestMethods.Http.Get;
+			request.KeepAlive = true;
+
+			request.CookieContainer = new CookieContainer ();
+			request.CookieContainer.Add (new Cookie ("SESSIONID", session.Id, "", Client.BaseUrl.Host));
+
+			try
+			{
+				var buffer = new char[4096];
+
+				// Handle a forceful disconnect
+				Disconnected += OnDisconnected;
+
+				// Open up the response stream
+				stream = request.GetResponse().GetResponseStream();
+
+				// Create a stream reader and...
+				var readStream = new StreamReader(stream, Encoding.GetEncoding("utf-8"));
+
+				// Read it into a buffer
+				var bytesRead = readStream.Read(buffer, 0, buffer.Length);
+
+				while (bytesRead > 0)
+				{
+					// Convert the contents of the buffer into a string
+					var stringified = new String(buffer, 0, buffer.Length);
+
+					// Parse the response
+					var parsedResponse = parser.Parse(stringified);
+
+					// Handle the message type
+					if (parsedResponse is LoginLogoutData)
+					{
+						HandleLoginLogout(parsedResponse as LoginLogoutData);
+					}
+					else if (parsedResponse is ChatData)
+					{
+						HandleMessage(parsedResponse as ChatData);
+					}
+
+					// Message received.  Clear the buffer
+					Array.Clear(buffer, 0, buffer.Length);
+
+					// Wait for the next message
+					bytesRead = readStream.Read(buffer, 0, buffer.Length);
+				}
+			}
+			catch (Exception exception)
+			{
+				Debug.WriteLine(exception.ToString());
+			}
+			finally
+			{
+				// If we've reached this point, then we've timed out or had an exception.  
+				//  Go ahead and reconnect
+				if (Disconnected != null)
+					Disconnected(this, new EventArgs());
+			}		
 		}
 	}
 }

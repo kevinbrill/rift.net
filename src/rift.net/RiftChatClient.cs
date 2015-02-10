@@ -25,6 +25,9 @@ namespace rift.net
 
 	    private event EventHandler Disconnected;
 
+		public event EventHandler Connecting;
+		public event EventHandler Connected;
+
 	    public event EventHandler<Message> GuildChatReceived;
 	    public event EventHandler<Message> WhisperReceived;
 	    public event EventHandler<Message> OfficerChatReceived;
@@ -84,6 +87,18 @@ namespace rift.net
 		{
 			var request = CreateRequest ("/guild/addChat", Method.GET );
 			request.AddQueryParameter ("characterId", character.Id);
+			request.AddQueryParameter ("message", message);
+
+			var response = Client.Execute (request);
+
+			return (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == HttpStatusCode.OK);
+		}
+
+		public bool SendOfficerMessage( string message )
+		{
+			var request = CreateRequest ("/guild/addChat", Method.GET );
+			request.AddQueryParameter ("characterId", character.Id);
+			request.AddQueryParameter ("officer", "true");
 			request.AddQueryParameter ("message", message);
 
 			var response = Client.Execute (request);
@@ -217,6 +232,10 @@ namespace rift.net
 				// Handle a forceful disconnect
 				Disconnected += OnDisconnected;
 
+				// Notify that we're connecting
+				if( Connecting != null )
+					Connecting( this, new EventArgs() );
+
 				// Open up the response stream
 				stream = request.GetResponse().GetResponseStream();
 
@@ -225,6 +244,10 @@ namespace rift.net
 
 				// Read it into a buffer
 				var bytesRead = readStream.Read(buffer, 0, buffer.Length);
+
+				// Notify that we've connected
+				if( Connected != null )
+					Connected(this, new EventArgs());
 
 				while (bytesRead > 0)
 				{
@@ -265,4 +288,3 @@ namespace rift.net
 		}
 	}
 }
-

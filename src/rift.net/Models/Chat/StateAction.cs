@@ -2,10 +2,9 @@
 
 namespace rift.net.Models
 {
-	public enum StateAction
-	{
-		Login,
-		Logout
-	}
+    public enum StateAction
+    {
+        Login,
+        Logout
+    }
 }
-

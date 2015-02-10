@@ -31,16 +31,6 @@ namespace rift.net.tests
 		}
 
 		[Test()]
-		public void Verify_Starting_Chat_Client()
-		{
-		    client.Connect();
-
-			client.Listen ();
-
-			client.Stop ();
-		}
-
-		[Test()]
 		public void Verify_That_Character_Has_Chat_History()
 		{
 			Assume.That (character, Is.Not.Null);

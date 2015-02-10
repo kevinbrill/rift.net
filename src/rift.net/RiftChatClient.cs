@@ -1,22 +1,24 @@
 ﻿using System;
-using rift.net.Models;
-using RestSharp;
-using System.Net;
-using System.IO;
-using AutoMapper;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
-using rift.net.rest.Chat;
-using Action = rift.net.Models.Action;
-using System.Threading.Tasks;
 using System.Threading;
+using AutoMapper;
+using log4net;
+using rift.net.Models;
+using rift.net.rest.Chat;
+using RestSharp;
+using Action = rift.net.Models.Action;
 
 namespace rift.net
 {
 	public class RiftChatClient : RiftRestClientSecured
 	{
+	    private static readonly ILog logger = LogManager.GetLogger(typeof (RiftChatClient));
+
 		private readonly Character character;
 		private List<Contact> guildMates = new List<Contact>();
 		private List<Contact> friends = new List<Contact>();
@@ -40,7 +42,7 @@ namespace rift.net
 				.ForMember (x => x.Id, y => y.MapFrom (src => src.messageId))
 				.ForMember (x => x.Sender, y => y.MapFrom (src => new Sender{ Id = src.senderId, Name = src.senderName }))
 				.ForMember (x => x.Text, y => y.MapFrom (src => src.message))
-				.ForMember (x => x.ReceiveDateTime, y => y.MapFrom (src => new DateTime (1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds (src.messageTime).ToLocalTime ()));
+				.ForMember (x => x.ReceiveDateTime, y => y.MapFrom (src => new DateTime (1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds (src.messageTime).ToLocalTime ()));
 		}
 
 		public RiftChatClient (Session session, Character character) : base(session)
@@ -123,7 +125,7 @@ namespace rift.net
 		{
 			Stop ();
 
-			thread = new Thread (new ThreadStart (ListenToChatStream));
+			thread = new Thread (ListenToChatStream);
 
 			thread.Start ();		
 		}
@@ -133,9 +135,8 @@ namespace rift.net
 		    if (Disconnected != null)
 		        Disconnected -= OnDisconnected;
 
-		    if (stream == null) return;
-
-            Debug.WriteLine("All done listening.  Have a nice day!");
+		    if (stream == null) 
+                return;
 
 			stream.Close ();
 		    stream.Dispose ();
@@ -152,15 +153,6 @@ namespace rift.net
             Listen();
         }
 
-	    protected override RestRequest CreateRequest( string url, Method method = Method.GET)
-		{
-			var request = base.CreateRequest (url, method);
-
-			request.AddCookie ("SESSIONID", session.Id);
-
-			return request;
-		}
-
 		private void HandleLoginLogout(LoginLogoutData data)
 		{
 			var action = new Action ();
@@ -171,7 +163,7 @@ namespace rift.net
 			action.InGame = data.game;
 			action.Character = guildMates.FirstOrDefault (x => x.Id == characterId) ?? friends.FirstOrDefault (x => x.Id == characterId);
 
-		    Debug.WriteLine("{0}\t{1}{2} has just {3}", DateTime.Now.ToShortTimeString(),
+		    logger.DebugFormat("{0}\t{1}{2} has just {3}", DateTime.Now.ToShortTimeString(),
 		        action.Character.FullName,
 		        action.Character.Guild != null ? string.Format(" <{0}>", action.Character.Guild.Name) : "",
 		        action.State == StateAction.Login ? "logged in" : "logged out");
@@ -209,14 +201,14 @@ namespace rift.net
                     break;
             }
 
-		    Debug.WriteLine("{0}\t{1}: {2}", DateTime.Now.ToShortTimeString(), message.Sender.Name, message.Text);
+            logger.DebugFormat("{0}\t{1}: {2}", DateTime.Now.ToShortTimeString(), message.Sender.Name, message.Text);
 		}
 
 		private void ListenToChatStream()
 		{
 			var parser = new ChatMessageParser ();
 
-			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Client.BaseUrl + "/servlet/chatlisten" );
+			var request = (HttpWebRequest)WebRequest.Create(Client.BaseUrl + "/servlet/chatlisten" );
 			request.UserAgent = "trion/mobile";
 			request.ProtocolVersion = HttpVersion.Version11;
 			request.Method = WebRequestMethods.Http.Get;
@@ -276,7 +268,9 @@ namespace rift.net
 			}
 			catch (Exception exception)
 			{
-				Debug.WriteLine(exception.ToString());
+                logger.Error("An unknown exception occurred", exception);
+
+			    throw;
 			}
 			finally
 			{

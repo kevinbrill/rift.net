@@ -159,7 +159,7 @@ namespace rift.net
 			var characterId = data.characterId.ToString ();
 
 			action.State = data.login ? StateAction.Login : StateAction.Logout;
-			action.InGame = data.game;
+			action.Location = data.game ? Location.Game : Location.Web;
 			action.Character = guildMates.FirstOrDefault (x => x.Id == characterId) ?? friends.FirstOrDefault (x => x.Id == characterId);
 
 		    logger.DebugFormat("{0}\t{1}{2} has just {3}", DateTime.Now.ToShortTimeString(),

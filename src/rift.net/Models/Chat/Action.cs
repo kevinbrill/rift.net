@@ -9,11 +9,6 @@ namespace rift.net.Models
 
         public StateAction State { get; set; }
 
-        public bool InGame { get; set; }
-
-        public bool InWeb
-        {
-            get { return !InGame; }
-        }
-    }
+		public Location Location { get; set; }
+	}
 }

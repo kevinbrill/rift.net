@@ -94,6 +94,7 @@
     <Compile Include="rest\Chat\ChatData.cs" />
     <Compile Include="rest\Chat\BeginData.cs" />
     <Compile Include="rest\Chat\LoginLogoutData.cs" />
+    <Compile Include="Models\Chat\Location.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

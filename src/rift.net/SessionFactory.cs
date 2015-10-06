@@ -8,7 +8,7 @@ namespace rift.net
 {
 	public class SessionFactory
 	{
-		const string loginUrl = "https://chat-us.riftgame.com/chatservice/loginByTicket?os=iOS&osVersion=5.100000&vendor=Apple";
+		const string loginUrl = "https://web-api-us.riftgame.com/chatservice/loginByTicket?os=iOS&osVersion=5.100000&vendor=Apple";
 
 		public Session Login(string username, string password)
 		{

@@ -1,39 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using AutoMapper;
-using log4net;
 using rift.net.Models;
-using rift.net.rest.Chat;
 using RestSharp;
+using System.Net;
+using System.IO;
+using AutoMapper;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using rift.net.rest.Chat;
 using Action = rift.net.Models.Action;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace rift.net
 {
 	public class RiftChatClient : RiftRestClientSecured
 	{
-	    private static readonly ILog logger = LogManager.GetLogger(typeof (RiftChatClient));
-
 		private readonly Character character;
 		private List<Contact> guildMates = new List<Contact>();
 		private List<Contact> friends = new List<Contact>();
 		private Stream stream;
 		private Thread thread;
 
-	    private event EventHandler Disconnected;
+		private event EventHandler Disconnected;
 
-		public event EventHandler Connecting;
-		public event EventHandler Connected;
-
-	    public event EventHandler<Message> GuildChatReceived;
-	    public event EventHandler<Message> WhisperReceived;
-	    public event EventHandler<Message> OfficerChatReceived;
-	    public event EventHandler<Action> Login;
-	    public event EventHandler<Action> Logout;
+		public event EventHandler<Message> GuildChatReceived;
+		public event EventHandler<Message> WhisperReceived;
+		public event EventHandler<Message> OfficerChatReceived;
+		public event EventHandler<Action> Login;
+		public event EventHandler<Action> Logout;
 
 		static RiftChatClient()
 		{
@@ -41,7 +37,7 @@ namespace rift.net
 				.ForMember (x => x.Id, y => y.MapFrom (src => src.messageId))
 				.ForMember (x => x.Sender, y => y.MapFrom (src => new Sender{ Id = src.senderId, Name = src.senderName }))
 				.ForMember (x => x.Text, y => y.MapFrom (src => src.message))
-				.ForMember (x => x.ReceiveDateTime, y => y.MapFrom (src => new DateTime (1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds (src.messageTime).ToLocalTime ()));
+				.ForMember (x => x.ReceiveDateTime, y => y.MapFrom (src => new DateTime (1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds (src.messageTime).ToLocalTime ()));
 		}
 
 		public RiftChatClient (Session session, Character character) : base(session)
@@ -49,24 +45,24 @@ namespace rift.net
 			this.character = character;
 		}
 
-	    public bool Connect()
-	    {
-            var securedClient = new RiftClientSecured(session);
+		public bool Connect()
+		{
+			var securedClient = new RiftClientSecured(session);
 
-            // Go online
-	        securedClient.GoOnline(character.Id);
+			// Go online
+			securedClient.GoOnline(character.Id);
 
-            // Get the character's friends
-            friends = securedClient.ListFriends(character.Id);
+			// Get the character's friends
+			friends = securedClient.ListFriends(character.Id);
 
-            // If the character is valid, then grab the guild mates
-            if (character.Guild != null)
-            {
-                guildMates = securedClient.ListGuildmates(character.Guild.Id);
-            }
+			// If the character is valid, then grab the guild mates
+			if (character.Guild != null)
+			{
+				guildMates = securedClient.ListGuildmates(character.Guild.Id);
+			}
 
-	        return true;
-	    }
+			return true;
+		}
 
 		public List<Message> ListChatHistory()
 		{
@@ -95,18 +91,6 @@ namespace rift.net
 			return (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == HttpStatusCode.OK);
 		}
 
-		public bool SendOfficerMessage( string message )
-		{
-			var request = CreateRequest ("/guild/addChat", Method.GET );
-			request.AddQueryParameter ("characterId", character.Id);
-			request.AddQueryParameter ("officer", "true");
-			request.AddQueryParameter ("message", message);
-
-			var response = Client.Execute (request);
-
-			return (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == HttpStatusCode.OK);
-		}
-
 		public bool SendWhisper( Character recipient, string message )
 		{
 			var request = CreateRequest ("/chat/whisper", Method.GET);
@@ -124,33 +108,43 @@ namespace rift.net
 		{
 			Stop ();
 
-			thread = new Thread (ListenToChatStream);
+			thread = new Thread (new ThreadStart (ListenToChatStream));
 
 			thread.Start ();		
 		}
 
 		public void Stop()
 		{
-		    if (Disconnected != null)
-		        Disconnected -= OnDisconnected;
+			if (Disconnected != null)
+				Disconnected -= OnDisconnected;
 
-		    if (stream == null) 
-                return;
+			if (stream == null) return;
+
+			Debug.WriteLine("All done listening.  Have a nice day!");
 
 			stream.Close ();
-		    stream.Dispose ();
+			stream.Dispose ();
 
-		    stream = null;
+			stream = null;
 		}
 
-	    private void OnDisconnected(object sender, EventArgs eventArgs)
-	    {
-            // Stop the stream
-            Stop();
+		private void OnDisconnected(object sender, EventArgs eventArgs)
+		{
+			// Stop the stream
+			Stop();
 
-            // Start the stream
-            Listen();
-        }
+			// Start the stream
+			Listen();
+		}
+
+		protected override RestRequest CreateRequest( string url, Method method = Method.GET)
+		{
+			var request = base.CreateRequest (url, method);
+
+			request.AddCookie ("SESSIONID", session.Id);
+
+			return request;
+		}
 
 		private void HandleLoginLogout(LoginLogoutData data)
 		{
@@ -162,52 +156,52 @@ namespace rift.net
 			action.Location = data.game ? Location.Game : Location.Web;
 			action.Character = guildMates.FirstOrDefault (x => x.Id == characterId) ?? friends.FirstOrDefault (x => x.Id == characterId);
 
-		    logger.DebugFormat("{0}\t{1}{2} has just {3}", DateTime.Now.ToShortTimeString(),
-		        action.Character.FullName,
-		        action.Character.Guild != null ? string.Format(" <{0}>", action.Character.Guild.Name) : "",
-		        action.State == StateAction.Login ? "logged in" : "logged out");
+			Debug.WriteLine("{0}\t{1}{2} has just {3}", DateTime.Now.ToShortTimeString(),
+				action.Character.FullName,
+				action.Character.Guild != null ? string.Format(" <{0}>", action.Character.Guild.Name) : "",
+				action.State == StateAction.Login ? "logged in" : "logged out");
 
-		    switch (action.State)
-		    {
-		        case StateAction.Login:
-		            if (Login != null)
-		                Login(this, action);
-		            break;
-		        case StateAction.Logout:
-		            if (Logout != null)
-		                Logout(this, action);
-		            break;
-		    }
+			switch (action.State)
+			{
+			case StateAction.Login:
+				if (Login != null)
+					Login(this, action);
+				break;
+			case StateAction.Logout:
+				if (Logout != null)
+					Logout(this, action);
+				break;
+			}
 		}
 
 		private void HandleMessage(ChatData data)
 		{
 			var message = Mapper.Map<ChatData, Message> (data);
 
-		    switch (data.ChatChannel)
-		    {
-		        case ChatChannel.Guild:
-		            if (GuildChatReceived != null)
-		                GuildChatReceived(this, message);
-                    break;
-                case ChatChannel.Officer:
-                    if (OfficerChatReceived != null)
-                        OfficerChatReceived(this, message);
-                    break;
-                case ChatChannel.Whisper:
-                    if (WhisperReceived != null)
-                        WhisperReceived(this, message);
-                    break;
-            }
+			switch (data.ChatChannel)
+			{
+			case ChatChannel.Guild:
+				if (GuildChatReceived != null)
+					GuildChatReceived(this, message);
+				break;
+			case ChatChannel.Officer:
+				if (OfficerChatReceived != null)
+					OfficerChatReceived(this, message);
+				break;
+			case ChatChannel.Whisper:
+				if (WhisperReceived != null)
+					WhisperReceived(this, message);
+				break;
+			}
 
-            logger.DebugFormat("{0}\t{1}: {2}", DateTime.Now.ToShortTimeString(), message.Sender.Name, message.Text);
+			Debug.WriteLine("{0}\t{1}: {2}", DateTime.Now.ToShortTimeString(), message.Sender.Name, message.Text);
 		}
 
 		private void ListenToChatStream()
 		{
 			var parser = new ChatMessageParser ();
 
-			var request = (HttpWebRequest)WebRequest.Create(Client.BaseUrl + "/servlet/chatlisten" );
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Client.BaseUrl + "/servlet/chatlisten" );
 			request.UserAgent = "trion/mobile";
 			request.ProtocolVersion = HttpVersion.Version11;
 			request.Method = WebRequestMethods.Http.Get;
@@ -223,10 +217,6 @@ namespace rift.net
 				// Handle a forceful disconnect
 				Disconnected += OnDisconnected;
 
-				// Notify that we're connecting
-				if( Connecting != null )
-					Connecting( this, new EventArgs() );
-
 				// Open up the response stream
 				stream = request.GetResponse().GetResponseStream();
 
@@ -235,10 +225,6 @@ namespace rift.net
 
 				// Read it into a buffer
 				var bytesRead = readStream.Read(buffer, 0, buffer.Length);
-
-				// Notify that we've connected
-				if( Connected != null )
-					Connected(this, new EventArgs());
 
 				while (bytesRead > 0)
 				{
@@ -267,9 +253,7 @@ namespace rift.net
 			}
 			catch (Exception exception)
 			{
-                logger.Error("An unknown exception occurred", exception);
-
-			    throw;
+				Debug.WriteLine(exception.ToString());
 			}
 			finally
 			{
@@ -281,3 +265,4 @@ namespace rift.net
 		}
 	}
 }
+

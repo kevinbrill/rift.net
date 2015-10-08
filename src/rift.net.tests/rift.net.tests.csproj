@@ -9,7 +9,7 @@
     <AssemblyName>rift.net.tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <RestorePackages>false</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,9 +45,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\rift.net\rift.net.csproj">
-      <Project>{F995CCB5-5588-487F-836D-D241D7DD6744}</Project>
-      <Name>rift.net</Name>
+    <ProjectReference Include="..\rift.net.iOS\rift.net.iOS.csproj">
+      <Project>{1675D586-1F07-415B-BB9C-0D54FF78D3DA}</Project>
+      <Name>rift.net.iOS</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

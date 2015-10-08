@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{BDC5F048-2BAD-41F3-8C84-FA8E99DDE4D6}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>rift.net.shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RiftClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RiftClientSecured.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RiftRestClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RiftRestClientSecured.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SessionFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\AuthenticationException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidSessionException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Character.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Contact.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Guilds\Guild.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Guilds\Info.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Guilds\WallPost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Presence.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Region.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Session.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Shard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Zone.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ZoneEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ZoneLocation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)rest\CharacterData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)rest\ContactData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)rest\GuildData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)rest\JsonResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)rest\ShardData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)rest\ZoneData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+</Project>

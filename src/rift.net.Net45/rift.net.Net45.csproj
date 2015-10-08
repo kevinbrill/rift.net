@@ -9,7 +9,7 @@
     <AssemblyName>rift.net</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <RestorePackages>false</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,40 +42,8 @@
     <Reference Include="mscorlib" />
     <Reference Include="System.Core" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SessionFactory.cs" />
-    <Compile Include="Models\Character.cs" />
-    <Compile Include="rest\JsonResponse.cs" />
-    <Compile Include="rest\CharacterData.cs" />
-    <Compile Include="Models\Presence.cs" />
-    <Compile Include="Models\Shard.cs" />
-    <Compile Include="rest\ShardData.cs" />
-    <Compile Include="rest\ContactData.cs" />
-    <Compile Include="Models\Contact.cs" />
-    <Compile Include="RiftClientSecured.cs" />
-    <Compile Include="RiftClient.cs" />
-    <Compile Include="RiftRestClient.cs" />
-    <Compile Include="Models\ZoneEvent.cs" />
-    <Compile Include="Models\Zone.cs" />
-    <Compile Include="Models\ZoneLocation.cs" />
-    <Compile Include="rest\ZoneData.cs" />
-    <Compile Include="Models\Session.cs" />
-    <Compile Include="Models\Guilds\Guild.cs" />
-    <Compile Include="Models\Guilds\WallPost.cs" />
-    <Compile Include="Models\Guilds\Info.cs" />
-    <Compile Include="rest\GuildData.cs" />
-    <Compile Include="RiftRestClientSecured.cs" />
-    <Compile Include="Exceptions\AuthenticationException.cs" />
-    <Compile Include="Exceptions\InvalidSessionException.cs" />
-    <Compile Include="Models\Region.cs" />
-    <Compile Include="Configuration.cs" />
-  </ItemGroup>
+  <Import Project="..\rift.net\rift.net.shared.projitems" Label="Shared" Condition="Exists('..\rift.net\rift.net.shared.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="rift.net.nuspec" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -85,4 +53,7 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

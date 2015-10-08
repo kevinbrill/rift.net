@@ -3,8 +3,9 @@ using NUnit.Framework;
 using System.Configuration;
 using System.Linq;
 using rift.net.Models;
+using rift.net.chat;
 
-namespace rift.net.tests
+namespace rift.net.chat.tests
 {
 	[TestFixture()]
 	public class ChatClientTests

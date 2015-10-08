@@ -1,8 +1,7 @@
-﻿using System;
-using rift.net.rest.Chat;
-using RestSharp;
+﻿using RestSharp;
+using rift.net.chat.rest;
 
-namespace rift.net
+namespace rift.net.chat
 {
 	public class ChatMessageParser
 	{

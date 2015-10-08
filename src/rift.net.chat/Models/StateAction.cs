@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace rift.net.Models
+namespace rift.net.chat.Models
 {
     public enum StateAction
     {

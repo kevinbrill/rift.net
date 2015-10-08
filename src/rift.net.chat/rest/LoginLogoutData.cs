@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace rift.net
+namespace rift.net.chat.rest
 {
 	public class LoginLogoutData
 	{

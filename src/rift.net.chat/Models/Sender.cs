@@ -1,6 +1,6 @@
 using System;
 
-namespace rift.net
+namespace rift.net.chat.Models
 {
     public class Sender
     {

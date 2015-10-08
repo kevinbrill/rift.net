@@ -8,12 +8,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using rift.net.rest.Chat;
-using Action = rift.net.Models.Action;
-using System.Threading.Tasks;
+using Action = rift.net.chat.Models.Action;
+using rift.net.chat.Models;
+using rift.net.chat.rest;
 using System.Threading;
 
-namespace rift.net
+namespace rift.net.chat
 {
 	public class RiftChatClient : RiftRestClientSecured
 	{

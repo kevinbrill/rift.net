@@ -1,7 +1,6 @@
 ﻿using System;
-using rift.net.rest.Chat;
 
-namespace rift.net
+namespace rift.net.chat.rest
 {
 	public class ChatData
 	{

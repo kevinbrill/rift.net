@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="ParseResults.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="rest\Chat\ChatChannel.cs" />
     <Compile Include="SessionFactory.cs" />
     <Compile Include="Models\Character.cs" />
     <Compile Include="rest\JsonResponse.cs" />
@@ -81,16 +80,6 @@
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\InvalidSessionException.cs" />
     <Compile Include="ScratchGameClient.cs" />
-    <Compile Include="RiftChatClient.cs" />
-    <Compile Include="Models\Chat\Message.cs" />
-    <Compile Include="Models\Chat\Sender.cs" />
-    <Compile Include="Models\Chat\Action.cs" />
-    <Compile Include="Models\Chat\StateAction.cs" />
-    <Compile Include="ChatMessageParser.cs" />
-    <Compile Include="rest\Chat\ChatData.cs" />
-    <Compile Include="rest\Chat\BeginData.cs" />
-    <Compile Include="rest\Chat\LoginLogoutData.cs" />
-    <Compile Include="Models\Chat\Location.cs" />
     <Compile Include="Models\Region.cs" />
     <Compile Include="Configuration.cs" />
   </ItemGroup>

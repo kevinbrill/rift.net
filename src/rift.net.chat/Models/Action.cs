@@ -1,7 +1,7 @@
 ﻿using System;
 using rift.net.Models;
 
-namespace rift.net.Models
+namespace rift.net.chat.Models
 {
     public class Action
     {

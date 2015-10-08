@@ -1,8 +1,9 @@
 ﻿using System;
 using NUnit.Framework;
-using rift.net.rest.Chat;
+using rift.net.chat;
+using rift.net.chat.rest;
 
-namespace rift.net.tests
+namespace rift.net.chat.tests
 {
 	[TestFixture()]
 	public class ChatParserTests

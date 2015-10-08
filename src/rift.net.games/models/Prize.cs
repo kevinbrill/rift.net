@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace rift.net.Models.Games
+namespace rift.net.games.models
 {
 	public class Prize
 	{

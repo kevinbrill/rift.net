@@ -32,9 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="CsQuery">
-      <HintPath>..\packages\CsQuery.1.3.4\lib\net40\CsQuery.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="RestSharp">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
@@ -46,7 +43,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ParseResults.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionFactory.cs" />
     <Compile Include="Models\Character.cs" />
@@ -69,17 +65,9 @@
     <Compile Include="Models\Guilds\WallPost.cs" />
     <Compile Include="Models\Guilds\Info.cs" />
     <Compile Include="rest\GuildData.cs" />
-    <Compile Include="rest\ScratchCardData.cs" />
     <Compile Include="RiftRestClientSecured.cs" />
-    <Compile Include="Models\Games\Prize.cs" />
-    <Compile Include="Exceptions\InvalidGameException.cs" />
-    <Compile Include="Exceptions\NoCardsAvailableException.cs" />
-    <Compile Include="Models\Games\Game.cs" />
-    <Compile Include="Models\Games\AccountGameInfo.cs" />
-    <Compile Include="GameResultsParser.cs" />
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\InvalidSessionException.cs" />
-    <Compile Include="ScratchGameClient.cs" />
     <Compile Include="Models\Region.cs" />
     <Compile Include="Configuration.cs" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace rift.net.Models.Games
+namespace rift.net.games.models
 {
 	public class AccountGameInfo
 	{

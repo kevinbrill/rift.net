@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using System.IO;
 
-namespace rift.net.tests
+namespace rift.net.games.tests
 {
 	[TestFixture()]
 	public class GameResultsParserTests

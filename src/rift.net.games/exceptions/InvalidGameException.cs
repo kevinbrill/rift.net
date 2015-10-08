@@ -1,7 +1,7 @@
 using System;
-using rift.net.Models.Games;
+using rift.net.games.models;
 
-namespace rift.net
+namespace rift.net.games.exceptions
 {
 	public class InvalidGameException : Exception
 	{

@@ -1,6 +1,6 @@
 using System;
 
-namespace rift.net
+namespace rift.net.games.exceptions
 {
 	public class NoCardsAvailableException : Exception
 	{

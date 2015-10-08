@@ -8,9 +8,9 @@
  */
 using System;
 using System.Collections.Generic;
-using rift.net.Models.Games;
+using rift.net.games.models;
 
-namespace rift.net
+namespace rift.net.games
 {
 	/// <summary>
 	/// Description of ParseResults.

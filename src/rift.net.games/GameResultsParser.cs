@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using CsQuery;
-using rift.net.Models.Games;
+using rift.net.games.models;
 
-namespace rift.net
+namespace rift.net.games
 {
 	public class GameResultsParser
 	{

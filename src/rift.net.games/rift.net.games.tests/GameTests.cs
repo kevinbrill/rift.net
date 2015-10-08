@@ -1,11 +1,13 @@
 ﻿using System;
 using NUnit.Framework;
 using System.Linq;
-using rift.net.Models.Games;
 using Moq;
+using rift.net.games;
 using rift.net.Models;
+using rift.net.games.models;
+using rift.net.games.exceptions;
 
-namespace rift.net.tests
+namespace rift.net.games.tests
 {
 	[TestFixture()]
 	public class GameTests

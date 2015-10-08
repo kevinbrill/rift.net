@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Linq;
-using rift.net.Models;
+using rift.net;
 using AutoMapper;
 using System.Collections.Generic;
-using rift.net.Models.Games;
+using rift.net.games.exceptions;
+using rift.net.games.models;
+using rift.net.games.rest;
+using rift.net.Models;
 using RestSharp;
-using rift.net.rest;
 
-namespace rift.net
+namespace rift.net.games
 {
 	public class ScratchGameClient : RiftClientSecured
 	{

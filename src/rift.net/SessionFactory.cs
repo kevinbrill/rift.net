@@ -8,8 +8,6 @@ namespace rift.net
 {
 	public class SessionFactory
 	{
-		const string loginUrl = "https://web-api-us.riftgame.com/chatservice/loginByTicket?os=iOS&osVersion=5.100000&vendor=Apple";
-
 		public Session Login(string username, string password)
 		{
 			var restClient = new RestClient ();
@@ -31,7 +29,7 @@ namespace rift.net
 				throw response.ErrorException;
 			}
 
-			restClient.BaseUrl = new Uri (loginUrl);
+			restClient.BaseUrl = new Uri (Configuration.Url + "/loginByTicket?os=iOS&osVersion=5.100000&vendor=Apple");
 
 			request = new RestRequest (Method.POST);
 			request.AddParameter ("ticket", response.Content);

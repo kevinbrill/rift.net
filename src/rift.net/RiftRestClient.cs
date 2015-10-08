@@ -8,8 +8,6 @@ namespace rift.net
 {
 	public class RiftRestClient
 	{
-		private const string url = "http://web-api-us.riftgame.com:8080/chatservice";
-
 		protected RestClient Client {
 			get; 
 			private set;
@@ -17,7 +15,7 @@ namespace rift.net
 
 		public RiftRestClient ()
 		{
-			Client = new RestClient (new Uri (url));
+			Client = new RestClient (new Uri (Configuration.Url));
 		}
 
 		protected virtual RestRequest CreateRequest(string url, Method method = Method.GET)

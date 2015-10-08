@@ -16,56 +16,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rift.net", "rift.net\rift.n
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rift.net.tests", "rift.net.tests\rift.net.tests.csproj", "{592120DF-2F5B-487B-BC11-76BE4737C099}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rift.net.chat", "rift.net.chat", "{7F618225-4765-4E04-B9D5-6D8952B9F0B3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rift.net.chat", "rift.net.chat\rift.net.chat.csproj", "{A6611CE7-FB58-4B27-8F10-C299D57187F5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rift.net.chat.tests", "rift.net.chat\rift.net.chat.tests\rift.net.chat.tests.csproj", "{078FC996-6904-4DAD-8807-0F1A76BE9CA2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rift.net.games", "rift.net.games", "{4ED07B0F-43E9-411B-81B9-878D65162308}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rift.net.games", "rift.net.games\rift.net.games.csproj", "{6AD62792-19A2-4FC4-8571-BD541F3C788D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rift.net.games.tests", "rift.net.games\rift.net.games.tests\rift.net.games.tests.csproj", "{9006D1DA-0CE4-4BC5-902B-2CB77F046CFC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{078FC996-6904-4DAD-8807-0F1A76BE9CA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{078FC996-6904-4DAD-8807-0F1A76BE9CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{078FC996-6904-4DAD-8807-0F1A76BE9CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{078FC996-6904-4DAD-8807-0F1A76BE9CA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{592120DF-2F5B-487B-BC11-76BE4737C099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{592120DF-2F5B-487B-BC11-76BE4737C099}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{592120DF-2F5B-487B-BC11-76BE4737C099}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{592120DF-2F5B-487B-BC11-76BE4737C099}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6AD62792-19A2-4FC4-8571-BD541F3C788D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AD62792-19A2-4FC4-8571-BD541F3C788D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AD62792-19A2-4FC4-8571-BD541F3C788D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AD62792-19A2-4FC4-8571-BD541F3C788D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9006D1DA-0CE4-4BC5-902B-2CB77F046CFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9006D1DA-0CE4-4BC5-902B-2CB77F046CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9006D1DA-0CE4-4BC5-902B-2CB77F046CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9006D1DA-0CE4-4BC5-902B-2CB77F046CFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6611CE7-FB58-4B27-8F10-C299D57187F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6611CE7-FB58-4B27-8F10-C299D57187F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6611CE7-FB58-4B27-8F10-C299D57187F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6611CE7-FB58-4B27-8F10-C299D57187F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F995CCB5-5588-487F-836D-D241D7DD6744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F995CCB5-5588-487F-836D-D241D7DD6744}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F995CCB5-5588-487F-836D-D241D7DD6744}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F995CCB5-5588-487F-836D-D241D7DD6744}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F995CCB5-5588-487F-836D-D241D7DD6744} = {D97D42E4-6A89-47B3-A7D9-180144D37DDC}
-		{592120DF-2F5B-487B-BC11-76BE4737C099} = {D97D42E4-6A89-47B3-A7D9-180144D37DDC}
-		{A6611CE7-FB58-4B27-8F10-C299D57187F5} = {7F618225-4765-4E04-B9D5-6D8952B9F0B3}
-		{078FC996-6904-4DAD-8807-0F1A76BE9CA2} = {7F618225-4765-4E04-B9D5-6D8952B9F0B3}
-		{6AD62792-19A2-4FC4-8571-BD541F3C788D} = {4ED07B0F-43E9-411B-81B9-878D65162308}
-		{9006D1DA-0CE4-4BC5-902B-2CB77F046CFC} = {4ED07B0F-43E9-411B-81B9-878D65162308}
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,12 +10,11 @@
     <projectUrl>http://github.com/kevinbrill/rift.net</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .net wrapper for Trion World's MMO 'Rift' REST API.</description>
-    <releaseNotes>Included support for both mono/net45 as well as Xamarin iOS</releaseNotes>
+    <releaseNotes>Removed Automapper to correct issue on iOS</releaseNotes>
     <copyright>Copyright 2015 Kevin Brill</copyright>
     <tags>Gaming MMO</tags>
     <dependencies>
-    	<dependency id="AutoMapper" version="4.0" />
-    	<dependency id="RestSharp" version="105.0" />
+    	<dependency id="RestSharp" version="105.2.3" />
     </dependencies>
   </metadata>
 <files>

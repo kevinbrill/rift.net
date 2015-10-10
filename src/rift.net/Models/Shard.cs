@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AutoMapper;
 
 namespace rift.net.Models
 {

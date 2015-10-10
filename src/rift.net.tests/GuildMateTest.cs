@@ -51,6 +51,9 @@ namespace rift.net.tests
 		public void Verify_That_Characters_Guild_Is_Valid()
 		{
 			var info = client.GetGuildInfo (characterId);
+
+			Assert.That (info, Is.Not.Null);
+			Assert.That (info.Id, Is.GreaterThan (0));
 		}
 	}
 }

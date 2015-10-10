@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using AutoMapper;
 using RestSharp;
 using rift.net.rest;
 using rift.net.Models;
 using rift.net.Models.Guilds;
+using System.Linq;
 
 namespace rift.net
 {
@@ -13,37 +13,6 @@ namespace rift.net
 	{
 		static RiftClientSecured()
 		{
-			Mapper.CreateMap<CharacterData, Character> ()
-				.ForMember (x => x.Id, y => y.MapFrom (src => src.playerId))
-				.ForMember (x => x.Shard, y => y.MapFrom (src => new Shard { Id = src.shardId, Name = src.shardName }))
-				.ForMember (x => x.Presence, y => y.MapFrom (src => new Presence {
-					IsOnlineInGame = src.onlineGame,
-					IsOnlineOnWeb = src.onlineWeb
-				}))
-				.ForMember(x=>x.Guild, opt => {
-					opt.Condition( src => src.guildId > 0 );
-					opt.MapFrom( src=> new Guild{ Id = src.guildId, 
-						Name = src.guildName,
-						ChatPermissions = new ChatPermissions {CanListen = src.guildListen, CanTalk = src.guildTalk, CanTalkInOfficer = src.guildOfficerChat }});
-				});
-
-			Mapper.CreateMap<ContactData, Contact> ()
-				.IncludeBase<CharacterData, Character> ()
-				.ForMember(x=>x.Guild, opt => {
-					opt.Condition( src => src.guildId > 0 );
-					opt.MapFrom( src=> new Guild{ Id = src.guildId, 
-						Name = src.guildName,
-						ChatPermissions = new ChatPermissions {CanListen = src.canListen, CanTalk = src.canTalk, CanTalkInOfficer = src.isOfficer }});
-				});
-
-			Mapper.CreateMap<WallPostData, WallPost> ()
-				.ForMember (x => x.Author, y => y.MapFrom (src => src.postedBy))
-				.ForMember (x => x.Message, y => y.MapFrom (src => src.text))
-				.ForMember (x => x.PostDate, y => y.MapFrom (src => new DateTime (1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds (src.posted).ToLocalTime ()));
-
-			Mapper.CreateMap<GuildData, Info> ()
-				.ForMember (x => x.Id, y => y.MapFrom (src => src.guildId))
-				.ForMember (x => x.MessageOfTheDay, y => y.MapFrom (src => src.motd));
 		}
 
 		public RiftClientSecured (Session session) : base(session)
@@ -57,7 +26,9 @@ namespace rift.net
 		{
 			var request = CreateRequest ("/chat/characters");
 
-			return ExecuteAndWrap<List<CharacterData>, List<Character>> (request);
+			var characterData = Execute<List<CharacterData>> (request);
+
+			return characterData != null ? characterData.Select(MapCharacterData).ToList() : new List<Character>();
 		}
 
         /// <summary>
@@ -98,7 +69,9 @@ namespace rift.net
 			var request = CreateRequest ("/friends");
 			request.AddQueryParameter ("characterId", characterId);
 
-			return ExecuteAndWrap<List<ContactData>, List<Contact>> (request);
+			var contactData = Execute<List<ContactData>> (request);
+
+			return contactData != null ? contactData.Select (MapContactData).ToList () : new List<Contact> ();
 		}
 
 		/// <summary>
@@ -109,7 +82,9 @@ namespace rift.net
 			var request = CreateRequest ("/guild/members");
 			request.AddQueryParameter ("guildId", guildId.ToString());
 
-			return ExecuteAndWrap<List<ContactData>, List<Contact>> (request);
+			var contactData = Execute<List<ContactData>> (request);
+
+			return contactData != null ? contactData.Select (MapContactData).ToList () : new List<Contact> ();
 		}
 
 		/// <summary>
@@ -122,7 +97,87 @@ namespace rift.net
 			var request = CreateRequest ("/guild/info");
 			request.AddQueryParameter ("characterId", characterId);
 
-			return ExecuteAndWrap<GuildData, Info> (request);
+			var guildData = Execute<GuildData> (request);
+
+			return MapFullGuildData (guildData);
+		}
+
+		private Character MapCharacterData( CharacterData characterData ) 
+		{
+			return MapCharacterData (characterData, new Character ());
+		}
+
+		private Character MapCharacterData( CharacterData characterData, Character character )
+		{
+			if( characterData.guildId > 0 )
+			{
+				character.Guild = new Guild {
+					Id = characterData.guildId,
+					Name = characterData.guildName,
+					ChatPermissions = new ChatPermissions {
+						CanListen = characterData.guildListen,
+						CanTalk = characterData.guildTalk,
+						CanTalkInOfficer = characterData.guildOfficerChat
+					}
+				};
+			}
+
+			character.Id = characterData.playerId;
+			character.Name = characterData.name;
+
+			character.Presence = new Presence {
+				IsOnlineInGame = characterData.onlineGame,
+				IsOnlineOnWeb = characterData.onlineWeb
+			};
+
+			character.Shard = new Shard {
+				Id = characterData.shardId,
+				Name = characterData.shardName
+			};
+
+			return character;
+		}
+
+		private Contact MapContactData( ContactData contactData )
+		{
+			var contact = new Contact ();
+
+			MapCharacterData (contactData, contact);
+
+			if( contact.Guild != null ) {
+				contact.Guild.ChatPermissions = new ChatPermissions {
+					CanListen = contactData.canListen,
+					CanTalk = contactData.canTalk,
+					CanTalkInOfficer = contactData.isOfficer
+				};
+			}
+
+			contact.IsOfficer = contactData.isOfficer;
+
+			return contact;
+		}
+		
+		private Info MapFullGuildData( GuildData guildData )
+		{
+			var guild = new Info ();
+
+			guild.Id = guildData.guildId;
+			guild.Name = guildData.name;
+			guild.Level = guildData.level;
+			guild.MessageOfTheDay = guildData.motd;
+			guild.ShardId = guildData.shardId;
+			guild.Wall = guildData.wall != null ? guildData.wall.Select (MapWallPostData).ToList () : new List<WallPost> ();
+
+			return guild;
+		}
+
+		private WallPost MapWallPostData(WallPostData wallPost) 
+		{
+			return new WallPost {
+				Author = wallPost.postedBy,
+				Message = wallPost.text,
+				PostDate = new DateTime (1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds (wallPost.posted).ToLocalTime ()
+			};
 		}
 	}
 }

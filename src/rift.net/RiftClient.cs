@@ -1,6 +1,5 @@
 ﻿using System;
 using RestSharp;
-using AutoMapper;
 using rift.net.rest;
 using System.Collections.Generic;
 using rift.net.Models;
@@ -11,25 +10,16 @@ namespace rift.net
 	public class RiftClient : RiftRestClient
 	{
 		static RiftClient()
-		{
-			Mapper.CreateMap<ShardData, Shard> ()
-				.ForMember (x => x.Id, y => y.MapFrom (src => src.shardId));
-
-			Mapper.CreateMap<ZoneData, Zone>() 
-				.ForMember(x=>x.Id, y => y.MapFrom(src=>src.zoneId))
-				.ForMember(x=>x.Name, y => y.MapFrom(src=>src.zone))
-				.ForMember(x=>x.Event, opt => {
-					opt.Condition( src => src.name != null );
-					opt.MapFrom( src=> new ZoneEvent{ Name = src.name, 
-						ActiveSince = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc).AddSeconds(src.started).ToLocalTime()});
-					});
+		{			
 		}
 
 		public List<Shard> ListShards()
 		{
 			var request = CreateRequest ("/shard/list");
 
-			return ExecuteAndWrap<List<ShardData>, List<Shard>> (request);
+			var shardData = Execute<List<ShardData>> (request);
+
+			return MapShardData (shardData);
 		}
 
 		public List<Zone> ListZones(int shardId)
@@ -37,7 +27,48 @@ namespace rift.net
 			var request = CreateRequest ("zoneevent/list");
 			request.AddQueryParameter ("shardId", shardId.ToString ());
 
-			return ExecuteAndWrap<List<ZoneData>, List<Zone>> (request);
+			var zoneData = Execute<List<ZoneData>> (request);
+
+			return MapZoneData (zoneData);
+		}
+
+		private List<Shard> MapShardData( List<ShardData> shardData )
+		{
+			var results = new List<Shard> (shardData.Count);
+
+			foreach( var data in shardData ) {
+				results.Add (new Shard {
+					Id = data.shardId,
+					Name = data.name
+				});
+			}
+
+			return results;
+		}
+
+		private List<Zone> MapZoneData( List<ZoneData> zoneData )
+		{
+			var results = new List<Zone> (zoneData.Count);
+
+			foreach( var data in zoneData )
+			{
+				var zone = new Zone {
+					Id = data.zoneId,
+					Name = data.zone,
+				};
+
+				if( data.name != null ) {
+					zone.Event = new ZoneEvent {
+						Name = data.name,
+						ActiveSince = new DateTime (1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds (data.started).ToLocalTime ()
+					};
+				}
+
+				results.Add (zone);
+
+			}
+
+			return results;
 		}
 	}
 }

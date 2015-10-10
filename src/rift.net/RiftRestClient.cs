@@ -2,7 +2,6 @@
 using RestSharp;
 using System.Collections.Generic;
 using rift.net.rest;
-using AutoMapper;
 
 namespace rift.net
 {
@@ -25,7 +24,7 @@ namespace rift.net
 			return request;
 		}
 
-		protected U ExecuteAndWrap<T,U>(RestRequest request) 
+		protected T Execute<T>(RestRequest request) 
 		{
 			var response = Client.Execute(request);
 
@@ -39,7 +38,7 @@ namespace rift.net
 				throw new Exception (string.Format ("An error occurred calling the service. {0}", response.Content));
 			}
 
-			return Mapper.Map<U> (content.data);
+			return content.data;
 		}
 	}
 }

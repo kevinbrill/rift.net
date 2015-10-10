@@ -33,9 +33,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="AutoMapper">
-      <HintPath>..\packages\AutoMapper.4.0.4\lib\Xamarin.iOS10\AutoMapper.dll</HintPath>
-    </Reference>
     <Reference Include="System.Collections" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Linq" />

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>rift.net</id>
-    <version>$version$</version>
+    <version>1.8.0</version>
     <title>rift.net</title>
     <authors>Kevin Brill</authors>
     <owners>Kevin Brill</owners>
@@ -10,7 +10,7 @@
     <projectUrl>http://github.com/kevinbrill/rift.net</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .net wrapper for Trion World's MMO 'Rift' REST API.</description>
-    <releaseNotes>Removed Automapper to correct issue on iOS</releaseNotes>
+    <releaseNotes>Added Android support</releaseNotes>
     <copyright>Copyright 2015 Kevin Brill</copyright>
     <tags>Gaming MMO</tags>
     <dependencies>
@@ -20,5 +20,6 @@
 <files>
 	<file src="rift.net.Net45/bin/Release/rift.net.dll" target="lib\net45" />
 	<file src="rift.net.iOS/bin/Release/rift.net.dll" target="lib\Xamarin.iOS10" />
+	<file src="rift.net.Android/bin/Release/rift.net.dll" target="lib\MonoAndroid10" />
 </files>
 </package>

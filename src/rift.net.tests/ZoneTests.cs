@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace rift.net.tests
 {
@@ -19,6 +20,14 @@ namespace rift.net.tests
 		public void Verify_That_Wolfsbane_Has_Zones()
 		{
 			var zones = client.ListZones (1706);
+
+			Assert.That (zones, Is.Not.Null.Or.Not.Empty);		
+		}
+
+		[Test()]
+		public async Task Verify_That_Wolfsbane_Has_Zones_Async()
+		{
+			var zones = await client.ListZonesAsync(1706);
 
 			Assert.That (zones, Is.Not.Null.Or.Not.Empty);		
 		}

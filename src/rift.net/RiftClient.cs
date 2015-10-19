@@ -4,6 +4,7 @@ using rift.net.rest;
 using System.Collections.Generic;
 using rift.net.Models;
 using rift.net.Models.Guilds;
+using System.Threading.Tasks;
 
 namespace rift.net
 {
@@ -22,12 +23,31 @@ namespace rift.net
 			return MapShardData (shardData);
 		}
 
+		public async Task<List<Shard>> ListShardsAsync()
+		{
+			var request = CreateRequest ("/shard/list");
+
+			var shardData = await ExecuteAsync<List<ShardData>> (request);
+
+			return MapShardData (shardData);
+		}
+
 		public List<Zone> ListZones(int shardId)
 		{
 			var request = CreateRequest ("zoneevent/list");
 			request.AddQueryParameter ("shardId", shardId.ToString ());
 
 			var zoneData = Execute<List<ZoneData>> (request);
+
+			return MapZoneData (zoneData);
+		}
+
+		public async Task<List<Zone>> ListZonesAsync(int shardId)
+		{
+			var request = CreateRequest ("zoneevent/list");
+			request.AddQueryParameter ("shardId", shardId.ToString ());
+
+			var zoneData = await ExecuteAsync<List<ZoneData>> (request);
 
 			return MapZoneData (zoneData);
 		}

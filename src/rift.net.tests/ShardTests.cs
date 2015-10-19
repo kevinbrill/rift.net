@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace rift.net.tests
 {
@@ -19,6 +20,14 @@ namespace rift.net.tests
 		public void Verify_That_Shard_List_Returns_Shards()
 		{
 			var shards = client.ListShards ();
+
+			Assert.That (shards, Is.Not.Null.And.Not.Empty);
+		}
+
+		[Test()]
+		public async Task Verify_That_Shard_List_Returns_Shards_Async()
+		{
+			var shards = await client.ListShardsAsync();
 
 			Assert.That (shards, Is.Not.Null.And.Not.Empty);
 		}

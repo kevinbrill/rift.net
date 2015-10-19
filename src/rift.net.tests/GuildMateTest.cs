@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace rift.net.tests
 {
@@ -38,9 +39,28 @@ namespace rift.net.tests
 		}
 
 		[Test()]
+		public async Task Verify_That_Guild_Has_Members_Async()
+		{
+			var guildMates = await client.ListGuildmatesAsync(guildId);
+
+			Assert.That (guildMates, Is.Not.Null.And.Not.Empty);
+			Assert.That (guildMates [0].Guild.Id, Is.EqualTo (guildId));
+		}
+
+		[Test()]
 		public void Verify_That_Guild_Has_Officers()
 		{
 			var guildMates = client.ListGuildmates (guildId);
+
+			var hasOfficers = guildMates.Any(x => x.IsOfficer);
+
+			Assert.That (hasOfficers, Is.True);
+		}
+
+		[Test()]
+		public async Task Verify_That_Guild_Has_Officers_Async()
+		{
+			var guildMates = await client.ListGuildmatesAsync(guildId);
 
 			var hasOfficers = guildMates.Any(x => x.IsOfficer);
 
@@ -54,6 +74,17 @@ namespace rift.net.tests
 
 			Assert.That (info, Is.Not.Null);
 			Assert.That (info.Id, Is.GreaterThan (0));
+			Assert.That (info.Wall, Is.Not.Null.And.Not.Empty);
+		}
+
+		[Test()]
+		public async Task Verify_That_Characters_Guild_Is_Valid_Async()
+		{
+			var info = await client.GetGuildInfoAsync(characterId);
+
+			Assert.That (info, Is.Not.Null);
+			Assert.That (info.Id, Is.GreaterThan (0));
+			Assert.That (info.Wall, Is.Not.Null.And.Not.Empty);
 		}
 	}
 }

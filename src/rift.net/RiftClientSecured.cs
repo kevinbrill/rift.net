@@ -6,6 +6,7 @@ using rift.net.rest;
 using rift.net.Models;
 using rift.net.Models.Guilds;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace rift.net
 {
@@ -27,6 +28,18 @@ namespace rift.net
 			var request = CreateRequest ("/chat/characters");
 
 			var characterData = Execute<List<CharacterData>> (request);
+
+			return characterData != null ? characterData.Select(MapCharacterData).ToList() : new List<Character>();
+		}
+
+		/// <summary>
+		/// Lists all characters across all shards for the currently authenticated account
+		/// </summary>
+		public async Task<List<Character>> ListCharactersAsync()
+		{
+			var request = CreateRequest ("/chat/characters");
+
+			var characterData = await ExecuteAsync<List<CharacterData>> (request);
 
 			return characterData != null ? characterData.Select(MapCharacterData).ToList() : new List<Character>();
 		}
@@ -75,6 +88,19 @@ namespace rift.net
 		}
 
 		/// <summary>
+		/// Lists all friend for the currently authenticated acount
+		/// </summary>
+		public async Task<List<Contact>> ListFriendsAsync( string characterId )
+		{
+			var request = CreateRequest ("/friends");
+			request.AddQueryParameter ("characterId", characterId);
+
+			var contactData = await ExecuteAsync<List<ContactData>> (request);
+
+			return contactData != null ? contactData.Select (MapContactData).ToList () : new List<Contact> ();
+		}
+
+		/// <summary>
 		/// Lists all members of the provided guild 
 		/// </summary>
 		public List<Contact> ListGuildmates( long guildId )
@@ -83,6 +109,19 @@ namespace rift.net
 			request.AddQueryParameter ("guildId", guildId.ToString());
 
 			var contactData = Execute<List<ContactData>> (request);
+
+			return contactData != null ? contactData.Select (MapContactData).ToList () : new List<Contact> ();
+		}
+
+		/// <summary>
+		/// Lists all members of the provided guild 
+		/// </summary>
+		public async Task<List<Contact>> ListGuildmatesAsync( long guildId )
+		{
+			var request = CreateRequest ("/guild/members");
+			request.AddQueryParameter ("guildId", guildId.ToString());
+
+			var contactData = await ExecuteAsync<List<ContactData>> (request);
 
 			return contactData != null ? contactData.Select (MapContactData).ToList () : new List<Contact> ();
 		}
@@ -98,6 +137,21 @@ namespace rift.net
 			request.AddQueryParameter ("characterId", characterId);
 
 			var guildData = Execute<GuildData> (request);
+
+			return MapFullGuildData (guildData);
+		}
+
+		/// <summary>
+		/// Gets information on the guild to which the supplied character is a member.  
+		/// This information includes wall posts, the message of the day, the level,
+		/// and shard
+		/// </summary>
+		public async Task<Info> GetGuildInfoAsync( string characterId )
+		{
+			var request = CreateRequest ("/guild/info");
+			request.AddQueryParameter ("characterId", characterId);
+
+			var guildData = await ExecuteAsync<GuildData> (request);
 
 			return MapFullGuildData (guildData);
 		}

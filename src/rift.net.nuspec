@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>rift.net</id>
-    <version>1.8.0</version>
+    <version>1.9.0</version>
     <title>rift.net</title>
     <authors>Kevin Brill</authors>
     <owners>Kevin Brill</owners>
@@ -10,7 +10,7 @@
     <projectUrl>http://github.com/kevinbrill/rift.net</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .net wrapper for Trion World's MMO 'Rift' REST API.</description>
-    <releaseNotes>Added Android support</releaseNotes>
+    <releaseNotes>Added async support</releaseNotes>
     <copyright>Copyright 2015 Kevin Brill</copyright>
     <tags>Gaming MMO</tags>
     <dependencies>

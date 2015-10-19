@@ -2,6 +2,7 @@
 using RestSharp;
 using System.Collections.Generic;
 using rift.net.rest;
+using System.Threading.Tasks;
 
 namespace rift.net
 {
@@ -27,6 +28,23 @@ namespace rift.net
 		protected T Execute<T>(RestRequest request) 
 		{
 			var response = Client.Execute(request);
+
+			if ((response == null) || (response.ResponseStatus != ResponseStatus.Completed)) {
+				throw new Exception (string.Format ("An error occurred making the call the service {0}", request.Resource), response.ErrorException);
+			}
+
+			var content = SimpleJson.DeserializeObject<JsonResponse<T>> (response.Content);
+
+			if ((content == null) || (content.status != "success")) {
+				throw new Exception (string.Format ("An error occurred calling the service. {0}", response.Content));
+			}
+
+			return content.data;
+		}
+
+		protected async Task<T> ExecuteAsync<T>(RestRequest request)
+		{
+			var response = await Client.ExecuteTaskAsync (request);
 
 			if ((response == null) || (response.ResponseStatus != ResponseStatus.Completed)) {
 				throw new Exception (string.Format ("An error occurred making the call the service {0}", request.Resource), response.ErrorException);

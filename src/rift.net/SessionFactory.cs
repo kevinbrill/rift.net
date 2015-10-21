@@ -3,6 +3,7 @@ using RestSharp;
 using System.Linq;
 using System.Net;
 using rift.net.Models;
+using System.Diagnostics;
 
 namespace rift.net
 {
@@ -29,19 +30,25 @@ namespace rift.net
 				throw response.ErrorException;
 			}
 
+			return Login (response.Content);
+		}
+
+		public Session Login(string ticket) {
+			
+			var restClient = new RestClient ();
 			restClient.BaseUrl = new Uri (Configuration.Url + "/loginByTicket?os=iOS&osVersion=5.100000&vendor=Apple");
 
-			request = new RestRequest (Method.POST);
-			request.AddParameter ("ticket", response.Content);
+			var request = new RestRequest (Method.POST);
+			request.AddParameter ("ticket", ticket);
 
-			response = restClient.Execute(request);
+			var response = restClient.Execute(request);
 
 			var cookie = response.Cookies.FirstOrDefault (x => x.Name == "SESSIONID");
 
 			if (cookie == null)
 				throw new InvalidSessionException ();
 
-			var session = new Session (cookie.Value);
+			var session = new Session (cookie.Value, ticket);
 
 			return session;
 		}

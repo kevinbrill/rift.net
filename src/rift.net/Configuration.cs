@@ -20,6 +20,11 @@ namespace rift.net
 				return Region == Region.UnitedStates ? US_URL : EU_URL;
 			}
 		}
+
+		public static int Timeout { 
+			get;
+			set;
+		}
 	}
 }
 

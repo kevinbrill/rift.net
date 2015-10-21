@@ -3,6 +3,7 @@ using RestSharp;
 using System.Collections.Generic;
 using rift.net.rest;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace rift.net
 {
@@ -27,16 +28,19 @@ namespace rift.net
 
 		protected T Execute<T>(RestRequest request) 
 		{
+			if (Configuration.Timeout > 0)
+				Client.Timeout = Configuration.Timeout;
+			
 			var response = Client.Execute(request);
 
 			if ((response == null) || (response.ResponseStatus != ResponseStatus.Completed)) {
-				throw new Exception (string.Format ("An error occurred making the call the service {0}", request.Resource), response.ErrorException);
+				throw new WebException (string.Format ("An error occurred making the call the service {0}", request.Resource), response.ErrorException);
 			}
 
 			var content = SimpleJson.DeserializeObject<JsonResponse<T>> (response.Content);
 
 			if ((content == null) || (content.status != "success")) {
-				throw new Exception (string.Format ("An error occurred calling the service. {0}", response.Content));
+				throw new Exception  (string.Format ("An error occurred calling the service. {0}", response.Content));
 			}
 
 			return content.data;
@@ -47,7 +51,7 @@ namespace rift.net
 			var response = await Client.ExecuteTaskAsync (request);
 
 			if ((response == null) || (response.ResponseStatus != ResponseStatus.Completed)) {
-				throw new Exception (string.Format ("An error occurred making the call the service {0}", request.Resource), response.ErrorException);
+				throw new WebException (string.Format ("An error occurred making the call the service {0}", request.Resource), response.ErrorException);
 			}
 
 			var content = SimpleJson.DeserializeObject<JsonResponse<T>> (response.Content);
